@@ -162,6 +162,10 @@ code{
   display:flex;align-items:center;gap:8px;flex-wrap:wrap;
 }
 .prod-d{font-size:12px;color:var(--tinta-2);margin:4px 0 0;line-height:1.45}
+.prod-ml{
+  font-size:10.5px;letter-spacing:.05em;color:var(--tinta-3);margin:6px 0 0;
+  text-transform:uppercase;
+}
 .prod-r{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none}
 .price{
   font-family:var(--serif);font-size:16px;color:var(--tinta);
@@ -604,6 +608,17 @@ const MENU = [
   { id:"velvet",   cat:"sign",  n:"Black Velvet",          d:"Té negro + leche + vainilla + azúcar morena + cream foam.", p:105, color:"#6E4A2E", foam:true, leche:true }
 ];
 
+/* =========================================================
+   TAMANOS
+   El menu impreso NO los especifica. Estos valores son una PROPUESTA
+   basada en lo que usan las casas de te de burbujas en Mexico.
+   >>> CONFIRMAR CON DAVID: mililitros reales y precio del upgrade. <<<
+   ========================================================= */
+const TAMANOS = [
+  { id:"regular", n:"Regular", ml:500, d:0 },
+  { id:"grande",  n:"Grande",  ml:700, d:15 }
+];
+
 /* Del menú impreso: Sweetness 0/25/50/75/100% · Ice Regular/Light/No Ice */
 const AZUCARES = [
   { id:"0",   n:"0%" }, { id:"25",  n:"25%" }, { id:"50", n:"50%" },
@@ -730,6 +745,7 @@ function renderLista(){
       +     (ya ? '<span class="tag g">' + ya + ' en tu pedido</span>' : '')
       +   '</div>'
       +   '<p class="prod-d">' + esc(m.d) + '</p>'
+      +   '<p class="prod-ml">' + TAMANOS[0].n + ' · ' + TAMANOS[0].ml + ' ml</p>'
       + '</div>'
       + '<div class="prod-r">'
       +   '<span class="price">' + money0(m.p) + '</span>'
@@ -767,7 +783,10 @@ function vaso(m, alto){
   s += '<path d="' + cuerpo + '" fill="' + (m.color || "#C9A87C") + '"/>';
 
   if (m.foam){
-    s += '<rect x="6" y="8" width="32" height="13" fill="#F7EFDD" clip-path="url(#' + uid + ')"/>';
+    // Capa fina con borde inferior curvo: se lee como crema flotando, no como
+    // un bloque que reemplaza el 30% de la bebida.
+    s += '<path d="M6 8 L38 8 L38 13 Q22 18 6 13 Z" fill="#F7EFDD" clip-path="url(#' + uid + ')"/>';
+    s += '<path d="M6 13 Q22 18 38 13" fill="none" stroke="rgba(27,23,18,.13)" stroke-width=".8" clip-path="url(#' + uid + ')"/>';
   }
   if (m.fizz){
     s += '<g clip-path="url(#' + uid + ')" fill="#FFFFFF" opacity=".5">'
@@ -821,7 +840,7 @@ function abrirProducto(id){
   draft = {
     pid: m.id, nombre: m.n, base: m.p,
     color: m.color, foam: !!m.foam, fizz: !!m.fizz,
-    conLeche: !!m.leche, bobaBase: !!m.boba, q: 1,
+    conLeche: !!m.leche, bobaBase: !!m.boba, q: 1, tam: "regular",
     hielo: "regular", azucar: "50",
     leche: m.leche ? "entera" : null,
     tops: [], nota: ""
@@ -833,6 +852,8 @@ function abrirProducto(id){
 
 function precioDraft(){
   let p = draft.base;
+  const tm = TAMANOS.find(x => x.id === draft.tam);
+  if (tm) p += tm.d;
   if (draft.conLeche && draft.leche){
     const l = LECHES.find(x => x.id === draft.leche);
     if (l) p += l.d;
@@ -854,7 +875,7 @@ function pintarProducto(){
     +   '<div style="flex:none">' + vaso({
           id: draft.pid, color: draft.color, foam: draft.foam, fizz: draft.fizz,
           boba: draft.bobaBase || draft.tops.indexOf("tapioca") >= 0
-        }, 92) + '</div>'
+        }, draft.tam === "grande" ? 112 : 92) + '</div>'
     +   '<div style="flex:1;min-width:0">'
     +     '<h2 style="font-size:22px;line-height:1.15">' + esc(m.n) + '</h2>'
     +     '<p style="margin:8px 0 0;font-size:12.5px;color:var(--tinta-2);line-height:1.5">' + esc(m.d) + '</p>'
@@ -862,6 +883,7 @@ function pintarProducto(){
     +   '<button class="x" onclick="cerrar(\'mProd\')" aria-label="Cerrar">&times;</button>'
     + '</div>';
 
+  h += opBlockTam();
   h += opBlock("Dulzor", AZUCARES, "azucar", false);
   h += opBlock("Hielo", HIELOS, "hielo", false);
   if (draft.conLeche) h += opBlock("Leche", LECHES, "leche", false);
@@ -900,6 +922,15 @@ function opBlock(titulo, lista, campo, req){
         + esc(o.n) + (o.d ? '<span class="d">+' + money0(o.d) + '</span>' : '') + '</button>'
       ).join("") + '</div>';
 }
+/* Selector de tamaño. Muestra los mililitros —que es lo que el cliente quiere
+   saber— y cuánto cuesta el upgrade. */
+function opBlockTam(){
+  return '<div class="opt-t"><span>Tamaño</span></div>'
+    + '<div class="opts">' + TAMANOS.map(t =>
+        '<button class="opt' + (draft.tam === t.id ? " on" : "") + '" onclick="setOpt(\'tam\',\'' + t.id + '\')">'
+        + esc(t.n) + '<span class="d">' + t.ml + ' ml' + (t.d ? ' +' + money0(t.d) : '') + '</span></button>'
+      ).join("") + '</div>';
+}
 function setOpt(campo, val){ draft[campo] = val; pintarProducto(); }
 function toggleTop(id){
   const i = draft.tops.indexOf(id);
@@ -909,6 +940,8 @@ function toggleTop(id){
 
 function resumenOpciones(l){
   const parts = [];
+  const tm = TAMANOS.find(y => y.id === l.tam);
+  if (tm) parts.push(tm.n + " " + tm.ml + " ml");
   if (l.leche && l.leche !== "entera"){
     const x = LECHES.find(y => y.id === l.leche);
     if (x) parts.push("Leche " + x.n.toLowerCase());
@@ -933,12 +966,12 @@ function confirmarProducto(){
   const p = precioDraft();
   const linea = {
     pid: draft.pid, nombre: draft.nombre, pu: p, q: draft.q,
-    color: draft.color, foam: draft.foam, fizz: draft.fizz,
+    color: draft.color, foam: draft.foam, fizz: draft.fizz, tam: draft.tam,
     boba: draft.bobaBase || draft.tops.indexOf("tapioca") >= 0,
     hielo: draft.hielo, azucar: draft.azucar,
     leche: draft.leche, tops: draft.tops.slice(), nota: draft.nota
   };
-  const key = JSON.stringify([linea.pid, linea.hielo, linea.azucar, linea.leche, linea.tops, linea.nota]);
+  const key = JSON.stringify([linea.pid, linea.tam, linea.hielo, linea.azucar, linea.leche, linea.tops, linea.nota]);
   const ex = carrito.find(l => l.key === key);
   if (ex) ex.q += linea.q; else carrito.push(Object.assign({ key: key }, linea));
   save(); pintarBadge(); renderLista(); cerrar("mProd");
@@ -1249,7 +1282,8 @@ function enviar(){
   msg += "Pedido directo (canal propio)\n\n";
 
   carrito.forEach(l => {
-    msg += l.q + "× " + l.nombre + "\n";
+    var _tm = TAMANOS.find(function(x){ return x.id === l.tam; });
+    msg += l.q + "× " + l.nombre + (_tm ? " · " + _tm.n + " " + _tm.ml + " ml" : "") + "\n";
     const o = resumenOpciones(l);
     if (o) msg += "   " + o + "\n";
     msg += "   " + money(l.pu*l.q) + "\n\n";
