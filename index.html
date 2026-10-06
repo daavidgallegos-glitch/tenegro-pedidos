@@ -896,6 +896,9 @@ function pintarProducto(){
   const p = precioDraft();
   const tm = TAMANOS.find(x => x.id === draft.tam) || TAMANOS[0];
   const altoCaja = Math.max.apply(null, TAMANOS.map(x => x.alto));
+  // El ancho tambien hay que reservarlo: el vaso se ensancha al crecer (70 -> 101 px)
+  // y empujaba el titulo hacia la derecha. Medir solo la vertical fue el error.
+  const anchoCaja = Math.round(altoCaja * 0.79);
 
   let h = '<div class="grab"></div>';
 
@@ -905,7 +908,8 @@ function pintarProducto(){
     // queda fijo a la altura del titulo y crece hacia abajo. Anclado abajo
     // crecia hacia arriba, se acercaba al titulo, y parecia que el titulo se
     // movia. El borde que se mueve ahora es el de abajo, que no toca nada.
-    +   '<div style="flex:none;height:' + altoCaja + 'px;display:flex;align-items:flex-start">'
+    +   '<div style="flex:none;width:' + anchoCaja + 'px;height:' + altoCaja
+    +     'px;display:flex;align-items:flex-end;justify-content:flex-start">'
     +     vaso({
           id: draft.pid, color: draft.color, foam: draft.foam, fizz: draft.fizz,
           boba: draft.bobaBase || draft.tops.indexOf("tapioca") >= 0
