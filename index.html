@@ -6,248 +6,358 @@
 <title>Pedidos directos — Té Negro Estudio</title>
 <style>
 :root{
-  --bg:#F7F6F3;
-  --surface:#FFFFFF;
-  --surface-2:#F1EFE8;
-  --border:rgba(0,0,0,.10);
-  --border-2:rgba(0,0,0,.18);
-  --text:#1F1E1B;
-  --muted:#6B6A66;
-  --hint:#9A9892;
-  --accent:#0F6E56;
-  --accent-soft:#E1F5EE;
-  --accent-dark:#04342C;
-  --amber:#BA7517;
-  --amber-soft:#FAEEDA;
-  --danger:#A32D2D;
-  --danger-soft:#FCEBEB;
-  --radius:12px;
-  --radius-lg:16px;
-  --shadow:0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.06);
+  /* Paleta tomada del menú impreso de Black Tea Lab */
+  --noche:    #100E0B;
+  --noche-2:  #1A1713;
+  --noche-3:  #242019;
+  --crema:    #F1EADA;
+  --crema-2:  #E6DCC7;
+  --crema-3:  #D9CDB2;
+  --tinta:    #1B1712;
+  --tinta-2:  #6B6153;
+  --tinta-3:  #9A8F7C;
+  --oro:      #C6A15B;
+  --oro-2:    #9C7B36;
+  --hoja:     #5A6B42;
+  --vino:     #8C3A2E;
+
+  --linea-noche: rgba(241,234,218,.14);
+  --linea-crema: rgba(27,23,18,.14);
+
+  --serif: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "Noto Serif", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --r: 10px;
+  --r-lg: 16px;
+  --r-xl: 22px;
+  --sombra: 0 1px 2px rgba(0,0,0,.24), 0 10px 30px rgba(0,0,0,.30);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{
-  background:var(--bg);color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  font-size:15px;line-height:1.5;
-  padding-bottom:150px;
+  background:var(--noche);
+  color:var(--crema);
+  font-family:var(--sans);
+  font-size:15px; line-height:1.55;
+  padding-bottom:170px;
+  -webkit-font-smoothing:antialiased;
 }
-h1,h2,h3{font-weight:500;margin:0}
+h1,h2,h3{font-weight:400;margin:0;font-family:var(--serif)}
 button{font-family:inherit;font-size:inherit;cursor:pointer;border:none;background:none;color:inherit}
-input,select,textarea{font-family:inherit;font-size:15px;color:var(--text)}
-.wrap{max-width:520px;margin:0 auto;padding:0 16px}
+input,select,textarea{font-family:var(--sans);font-size:15px;color:var(--tinta)}
+.wrap{max-width:min(520px,100%);margin:0 auto;padding:0 16px}
 
-/* ---------- header ---------- */
+/* ---------- encabezado ---------- */
 header{
-  background:var(--surface);border-bottom:.5px solid var(--border);
+  background:var(--noche);
+  border-bottom:.5px solid var(--linea-noche);
   position:sticky;top:0;z-index:40;
 }
-.hd{display:flex;align-items:center;gap:10px;padding:12px 16px;max-width:520px;margin:0 auto}
+.hd{display:flex;align-items:center;gap:12px;padding:14px 16px;max-width:520px;margin:0 auto}
 .logo{
-  width:36px;height:36px;border-radius:10px;background:var(--accent);
-  display:flex;align-items:center;justify-content:center;flex:none;
-  color:#fff;font-size:14px;font-weight:500;letter-spacing:.5px;
+  width:38px;height:38px;border-radius:50%;flex:none;
+  border:1px solid var(--oro);
+  display:flex;align-items:center;justify-content:center;
 }
-.hd-txt h1{font-size:15px}
-.hd-txt p{margin:0;font-size:12px;color:var(--muted)}
+.logo svg{width:20px;height:20px;display:block}
+.hd-txt{flex:1;min-width:0}
+.hd-txt h1{
+  font-size:15px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--crema);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.hd-txt p{
+  margin:2px 0 0;font-size:10.5px;letter-spacing:.13em;
+  text-transform:uppercase;color:var(--oro);
+}
 .pill{
-  margin-left:auto;font-size:11px;padding:4px 9px;border-radius:999px;
-  background:var(--accent-soft);color:var(--accent-dark);white-space:nowrap;
+  margin-left:auto;flex:none;font-size:9px;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 9px;border-radius:999px;white-space:nowrap;
+  border:1px solid var(--linea-noche);color:var(--crema);opacity:.75;
 }
 
-/* ---------- tabs ---------- */
+/* ---------- pestañas ---------- */
 nav{
   position:fixed;bottom:0;left:0;right:0;z-index:50;
-  background:var(--surface);border-top:.5px solid var(--border);
-  padding:6px 0 max(6px,env(safe-area-inset-bottom));
+  background:var(--noche-2);border-top:.5px solid var(--linea-noche);
+  padding:7px 0 max(7px,env(safe-area-inset-bottom));
 }
 .tabs{display:flex;max-width:520px;margin:0 auto}
 .tab{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:6px 0;font-size:11px;color:var(--muted);
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:5px 0;font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:rgba(241,234,218,.5);
 }
-.tab .ic{width:20px;height:20px;border:.5px solid var(--border-2);border-radius:6px}
-.tab.on{color:var(--accent);font-weight:500}
-.tab.on .ic{background:var(--accent-soft);border-color:var(--accent)}
+.tab .ic{width:18px;height:18px;border:1px solid currentColor;border-radius:5px;opacity:.75}
+.tab.on{color:var(--oro)}
+.tab.on .ic{background:var(--oro);border-color:var(--oro);opacity:1}
 .badge{
-  position:absolute;transform:translate(14px,-6px);
-  background:var(--danger);color:#fff;font-size:10px;font-weight:500;
+  position:absolute;transform:translate(13px,-7px);
+  background:var(--oro);color:var(--tinta);font-size:10px;font-weight:700;
   min-width:16px;height:16px;border-radius:999px;display:flex;
   align-items:center;justify-content:center;padding:0 4px;
 }
 .badge.hide{display:none}
 
-/* ---------- generic ---------- */
-.sec-t{font-size:13px;color:var(--muted);margin:22px 0 10px;letter-spacing:.02em}
-.card{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+/* ---------- bloques ---------- */
 .view{display:none}
 .view.on{display:block}
 .mt{margin-top:14px}
+.card{
+  background:var(--crema);color:var(--tinta);
+  border-radius:var(--r-lg);padding:18px;
+}
+.sec-t{
+  font-family:var(--serif);font-size:11.5px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--oro);margin:26px 0 12px;
+}
+.note{
+  font-size:12.5px;line-height:1.55;color:var(--tinta-2);
+  background:var(--crema-2);border-radius:var(--r);padding:12px 14px;margin-top:12px;
+}
+.note b{font-weight:600;color:var(--tinta)}
+.empty{
+  text-align:center;color:rgba(241,234,218,.5);font-size:13px;
+  padding:38px 18px;line-height:1.7;
+}
+code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;
+  background:rgba(27,23,18,.08);padding:1px 5px;border-radius:4px;
+}
+.card code, .note code{background:rgba(27,23,18,.08)}
+.empty code{background:rgba(241,234,218,.12)}
 
-/* ---------- chips ---------- */
-.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none}
+/* ---------- categorías ---------- */
+.chips{
+  display:flex;gap:8px;overflow-x:auto;padding:16px 0 4px;
+  scrollbar-width:none;
+}
 .chips::-webkit-scrollbar{display:none}
 .chip{
-  flex:none;padding:7px 14px;border-radius:999px;font-size:13px;
-  background:var(--surface);border:.5px solid var(--border);color:var(--muted);
-  white-space:nowrap;
+  flex:none;padding:8px 15px;border-radius:999px;font-size:12px;
+  letter-spacing:.05em;white-space:nowrap;
+  border:1px solid var(--linea-noche);color:rgba(241,234,218,.7);
+  transition:background .15s,color .15s,border-color .15s;
 }
-.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip.on{background:var(--crema);border-color:var(--crema);color:var(--tinta);font-weight:600}
 
-/* ---------- product ---------- */
+.cat-head{display:flex;align-items:baseline;gap:10px;margin:20px 0 12px;flex-wrap:wrap}
+.cat-head h2{
+  font-size:17px;letter-spacing:.1em;text-transform:uppercase;color:var(--crema);
+}
+.cat-head span{
+  font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--oro);
+}
+
+/* ---------- tarjeta de bebida ---------- */
 .prod{
-  display:flex;gap:12px;align-items:flex-start;padding:14px 0;
-  border-bottom:.5px solid var(--border);
+  display:flex;gap:14px;align-items:center;min-width:0;min-width:0;
+  background:var(--crema);color:var(--tinta);
+  border-radius:var(--r-lg);padding:14px;margin-bottom:10px;
+  transition:transform .12s;
 }
-.prod:last-child{border-bottom:none}
+.prod:active{transform:scale(.985)}
 .prod-b{flex:1;min-width:0}
-.prod-n{font-size:14px;font-weight:500;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.prod-d{font-size:12.5px;color:var(--muted);margin:3px 0 0}
-.tag{font-size:10px;padding:2px 7px;border-radius:999px;background:var(--amber-soft);color:var(--amber);font-weight:500}
-.tag.g{background:var(--accent-soft);color:var(--accent-dark)}
-.prod-r{display:flex;align-items:center;gap:10px;flex:none;padding-top:2px}
-.price{font-size:14px;font-weight:500;white-space:nowrap}
+.prod-n{
+  font-family:var(--serif);font-size:15.5px;line-height:1.25;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.prod-d{font-size:12px;color:var(--tinta-2);margin:4px 0 0;line-height:1.45}
+.prod-r{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:none}
+.price{
+  font-family:var(--serif);font-size:16px;color:var(--tinta);
+  font-variant-numeric:tabular-nums;
+}
 .add{
-  width:30px;height:30px;border-radius:999px;background:var(--accent);color:#fff;
-  font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;background:var(--tinta);color:var(--crema);
+  font-size:22px;line-height:1;display:flex;align-items:center;justify-content:center;
+  font-family:var(--sans);flex:none;
 }
+.opts.seq{gap:6px}
+.opts.seq .opt{flex:1;min-width:0;padding:11px 0;text-align:center;border-radius:var(--r)}
+.prod[role=button]{cursor:pointer}
+.tag{
+  font-size:9px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  padding:3px 7px;border-radius:999px;background:var(--oro);color:var(--tinta);
+}
+.tag.g{background:var(--hoja);color:#fff}
 
-/* ---------- cart ---------- */
-.line{display:flex;gap:12px;padding:12px 0;border-bottom:.5px solid var(--border)}
-.line:last-child{border-bottom:none}
+/* vaso */
+.vaso{flex:none;display:block}
+
+/* ---------- carrito ---------- */
+.line{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--linea-crema);align-items:flex-start}
+.line:last-child{border-bottom:none;padding-bottom:4px}
 .line-b{flex:1;min-width:0}
-.line-n{font-size:13.5px;font-weight:500}
-.line-o{font-size:12px;color:var(--muted);margin-top:2px}
-.qty{display:flex;align-items:center;gap:0;border:.5px solid var(--border-2);border-radius:999px;overflow:hidden;height:30px;flex:none}
-.qty button{width:28px;height:28px;font-size:16px;color:var(--muted)}
-.qty span{min-width:22px;text-align:center;font-size:13px;font-weight:500}
-.sum{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;color:var(--muted)}
-.sum.big{font-size:16px;font-weight:500;color:var(--text);padding-top:10px;margin-top:6px;border-top:.5px solid var(--border)}
-.sum .pos{color:var(--accent)}
-.sum .neg{color:var(--danger)}
+.line-n{font-family:var(--serif);font-size:14.5px;line-height:1.3}
+.line-o{font-size:11.5px;color:var(--tinta-2);margin-top:4px;line-height:1.5}
+.qty{
+  display:flex;align-items:center;flex:none;
+  border:1px solid var(--linea-crema);border-radius:999px;overflow:hidden;height:30px;
+}
+.qty button{width:28px;height:28px;font-size:16px;color:var(--tinta-2)}
+.qty span{min-width:22px;text-align:center;font-size:13px;font-weight:600}
+.sum{display:flex;justify-content:space-between;font-size:13px;padding:5px 0;color:var(--tinta-2)}
+.sum.big{
+  font-family:var(--serif);font-size:19px;color:var(--tinta);
+  padding-top:14px;margin-top:8px;border-top:1px solid var(--linea-crema);
+}
+.sum .pos{color:var(--hoja);font-weight:600}
+.sum .neg{color:var(--vino);font-weight:600}
 
-/* ---------- forms ---------- */
-label.f{display:block;font-size:12px;color:var(--muted);margin:12px 0 5px}
+/* ---------- formularios ---------- */
+label.f{
+  display:block;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--tinta-2);margin:16px 0 6px;
+}
 input[type=text],input[type=tel],select,textarea{
-  width:100%;padding:11px 12px;border:.5px solid var(--border-2);
-  border-radius:var(--radius);background:var(--surface);outline:none;
+  width:100%;padding:12px 13px;border:1px solid var(--linea-crema);
+  border-radius:var(--r);background:#fff;outline:none;color:var(--tinta);
 }
-input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+input:focus,select:focus,textarea:focus{border-color:var(--tinta)}
 textarea{resize:vertical;min-height:64px}
-input.bad,select.bad{border-color:var(--danger);background:var(--danger-soft)}
-.err-msg{font-size:12px;color:var(--danger);margin-top:5px}
+input.bad,select.bad{border-color:var(--vino);background:#FBEFEC}
+.err-msg{font-size:11.5px;color:var(--vino);margin-top:6px;font-weight:600}
 .btn{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:500;
-  background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  width:100%;padding:15px;border-radius:var(--r);
+  font-size:14px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;
+  background:var(--tinta);color:var(--crema);
 }
-.btn.sec{background:var(--surface);border:.5px solid var(--border-2);color:var(--text)}
+.btn.sec{background:transparent;border:1px solid var(--linea-crema);color:var(--tinta)}
+.btn.wa{background:var(--hoja);color:#fff}
 .btn:disabled{opacity:.4}
-.btn.wa{background:#1FA855}
 
-/* ---------- cart bar ---------- */
-.cartbar{
-  position:fixed;left:0;right:0;bottom:64px;z-index:45;
-  padding:0 16px 10px;pointer-events:none;
-}
+/* ---------- barra de carrito ---------- */
+.cartbar{position:fixed;left:0;right:0;bottom:66px;z-index:45;padding:0 16px 10px;pointer-events:none}
 .cartbar .inner{
   max-width:520px;margin:0 auto;pointer-events:auto;
-  background:var(--accent-dark);color:#fff;border-radius:var(--radius-lg);
-  padding:13px 16px;display:flex;align-items:center;gap:12px;
-  box-shadow:var(--shadow);cursor:pointer;
+  background:var(--crema);color:var(--tinta);
+  border-radius:var(--r-lg);padding:13px 18px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:var(--sombra);cursor:pointer;
 }
-.cartbar .n{font-size:11px;opacity:.7}
-.cartbar .v{font-size:16px;font-weight:500}
-.cartbar .go{margin-left:auto;font-size:13px;opacity:.9}
+.cartbar .n{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-2)}
+.cartbar .v{font-family:var(--serif);font-size:19px}
+.cartbar .go{
+  margin-left:auto;font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  font-weight:600;color:var(--oro-2);
+}
 .cartbar.hide{display:none}
 
-/* ---------- modal ---------- */
+/* ---------- modales ---------- */
 .scrim{
-  position:fixed;inset:0;background:rgba(20,20,18,.42);z-index:60;
+  position:fixed;inset:0;background:rgba(8,7,5,.72);z-index:60;
   display:none;align-items:flex-end;justify-content:center;
 }
 .scrim.on{display:flex}
 .sheet{
-  background:var(--bg);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;
-  border-radius:20px 20px 0 0;padding:8px 16px 24px;
-  animation:up .22s ease-out;
+  background:var(--crema);color:var(--tinta);
+  width:100%;max-width:520px;max-height:93vh;overflow-y:auto;
+  border-radius:var(--r-xl) var(--r-xl) 0 0;padding:8px 20px 28px;
+  animation:sube .24s ease-out;
 }
-@keyframes up{from{transform:translateY(18px);opacity:.6}to{transform:none;opacity:1}}
-.grab{width:38px;height:4px;border-radius:99px;background:var(--border-2);margin:8px auto 14px}
-.sh-h{display:flex;align-items:flex-start;gap:12px;margin-bottom:4px}
-.sh-h h2{font-size:17px}
-.sh-h p{margin:4px 0 0;font-size:13px;color:var(--muted)}
-.x{margin-left:auto;font-size:22px;color:var(--hint);line-height:1;padding:0 4px}
-.opt-t{font-size:12px;color:var(--muted);margin:18px 0 8px;display:flex;justify-content:space-between}
-.opt-t .req{color:var(--danger);font-size:11px}
+@keyframes sube{from{transform:translateY(22px);opacity:.5}to{transform:none;opacity:1}}
+.grab{width:40px;height:4px;border-radius:99px;background:var(--crema-3);margin:10px auto 16px}
+.sh-h{display:flex;align-items:flex-start;gap:14px}
+.sh-h h2{font-size:21px;line-height:1.2}
+.sh-h p{margin:6px 0 0;font-size:12.5px;color:var(--tinta-2);line-height:1.5}
+.x{margin-left:auto;font-size:24px;color:var(--tinta-3);line-height:1;padding:0 4px}
+.opt-t{
+  font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--tinta-2);margin:22px 0 9px;display:flex;justify-content:space-between;
+}
+.opt-t .req{color:var(--vino);font-size:10px;font-weight:600}
 .opts{display:flex;flex-wrap:wrap;gap:8px}
 .opt{
-  padding:9px 14px;border-radius:var(--radius);font-size:13px;
-  background:var(--surface);border:.5px solid var(--border);color:var(--muted);
+  padding:10px 15px;border-radius:999px;font-size:13px;
+  background:#fff;border:1px solid var(--linea-crema);color:var(--tinta-2);
 }
-.opt.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-dark);font-weight:500}
-.opt .d{font-size:11px;opacity:.75;margin-left:5px}
+.opt.on{background:var(--tinta);border-color:var(--tinta);color:var(--crema);font-weight:600}
+.opt .d{font-size:11px;opacity:.7;margin-left:6px}
+.opt.on .d{opacity:.85}
 
 /* ---------- pagos ---------- */
-.pays{display:flex;flex-direction:column;gap:8px}
+.pays{display:flex;flex-direction:column;gap:9px}
 .pay{
-  display:flex;align-items:center;gap:12px;text-align:left;width:100%;
-  padding:13px 14px;border-radius:var(--radius);
-  background:var(--surface);border:.5px solid var(--border);
+  display:flex;align-items:center;gap:13px;text-align:left;width:100%;
+  padding:14px;border-radius:var(--r);
+  background:#fff;border:1px solid var(--linea-crema);
 }
-.pay.on{border-color:var(--accent);background:var(--accent-soft)}
-.radio{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border-2);flex:none;position:relative}
-.pay.on .radio{border-color:var(--accent)}
-.pay.on .radio:after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--accent)}
+.pay.on{border-color:var(--tinta);background:#fff;box-shadow:inset 0 0 0 1px var(--tinta)}
+.radio{width:17px;height:17px;border-radius:50%;border:1.5px solid var(--crema-3);flex:none;position:relative}
+.pay.on .radio{border-color:var(--tinta)}
+.pay.on .radio:after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--tinta)}
 .pay-b{flex:1;min-width:0}
-.pay-n{font-size:13.5px;font-weight:500;display:block}
-.pay-c{font-size:11.5px;color:var(--muted);display:block;margin-top:2px}
-.pay.on .pay-c{color:var(--accent-dark)}
-.pay-c.free{color:var(--accent)}
+.pay-n{font-size:13.5px;font-weight:600;display:block}
+.pay-c{font-size:11.5px;color:var(--tinta-2);display:block;margin-top:3px}
+.pay-c.free{color:var(--hoja);font-weight:600}
 .clabe{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;
-  letter-spacing:.06em;background:var(--surface);border:.5px solid var(--border-2);
-  border-radius:var(--radius);padding:12px;text-align:center;user-select:all;
+  letter-spacing:.06em;background:#fff;border:1px solid var(--linea-crema);
+  border-radius:var(--r);padding:14px;text-align:center;user-select:all;
 }
-.copy{font-size:12px;color:var(--accent);padding:6px 0 0;text-align:center;display:block;width:100%}
+.copy{
+  font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  color:var(--oro-2);padding:8px 0 0;text-align:center;display:block;width:100%;
+}
 
-/* ---------- negocio ---------- */
-.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.metric{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius);padding:13px}
-.metric .l{font-size:11.5px;color:var(--muted)}
-.metric .v{font-size:20px;font-weight:500;margin-top:3px}
-.metric.hi{background:var(--accent-soft);border-color:transparent}
-.metric.hi .v{color:var(--accent-dark)}
-.ord{border:.5px solid var(--border);border-radius:var(--radius);background:var(--surface);padding:13px;margin-bottom:10px}
-.ord-h{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
-.ord-f{font-size:13px;font-weight:500}
-.ord-d{font-size:11.5px;color:var(--hint);margin-left:auto}
-.ord-i{font-size:12.5px;color:var(--muted);padding:2px 0}
-.ord-t{display:flex;justify-content:space-between;font-size:13.5px;font-weight:500;margin-top:9px;padding-top:9px;border-top:.5px solid var(--border)}
-.empty{text-align:center;color:var(--hint);font-size:13px;padding:34px 16px}
-.note{font-size:12px;color:var(--muted);background:var(--surface-2);border-radius:var(--radius);padding:12px;margin-top:10px}
-.note b{font-weight:500;color:var(--text)}
-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--surface-2);padding:1px 5px;border-radius:4px}
-.ok{width:52px;height:52px;border-radius:50%;background:var(--accent-soft);border:1.5px solid var(--accent);margin:0 auto 14px;position:relative}
-.ok:after{content:"";position:absolute;left:17px;top:14px;width:14px;height:8px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg)}
-.code{
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:22px;font-weight:500;
-  letter-spacing:.14em;text-align:center;background:var(--surface);border:1px dashed var(--accent);
-  border-radius:var(--radius);padding:14px;color:var(--accent-dark);
+/* ---------- confirmación ---------- */
+.ok{
+  width:56px;height:56px;border-radius:50%;background:var(--hoja);
+  margin:6px auto 16px;position:relative;
 }
-/* ---------- modo prueba ---------- */
+.ok:after{
+  content:"";position:absolute;left:19px;top:16px;width:15px;height:8px;
+  border-left:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(-45deg);
+}
+.code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:23px;
+  letter-spacing:.16em;text-align:center;background:#fff;
+  border:1px dashed var(--oro);border-radius:var(--r);padding:16px;color:var(--tinta);
+}
+
+/* ---------- panel de negocio ---------- */
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.metric{background:var(--crema);color:var(--tinta);border-radius:var(--r);padding:14px}
+.metric .l{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:var(--tinta-2)}
+.metric .v{font-family:var(--serif);font-size:22px;margin-top:4px}
+.metric.hi{background:var(--oro);color:var(--tinta)}
+.metric.hi .l{color:rgba(27,23,18,.7)}
+.ord{
+  background:var(--crema);color:var(--tinta);border-radius:var(--r);
+  padding:15px;margin-bottom:10px;
+}
+.ord-h{display:flex;align-items:baseline;gap:8px;margin-bottom:9px;flex-wrap:wrap}
+.ord-f{font-family:var(--serif);font-size:14px}
+.ord-d{font-size:11px;color:var(--tinta-3);margin-left:auto}
+.ord-i{font-size:12.5px;color:var(--tinta-2);padding:2px 0}
+.ord-t{
+  display:flex;justify-content:space-between;font-family:var(--serif);
+  font-size:15px;margin-top:11px;padding-top:11px;border-top:1px solid var(--linea-crema);
+}
+
+/* ---------- aviso de prueba ---------- */
 .banner{
-  background:var(--amber-soft);border-bottom:.5px solid rgba(186,117,23,.28);
-  padding:10px 16px;font-size:12.5px;color:#633806;line-height:1.45;
+  background:var(--oro);color:var(--tinta);
+  padding:11px 16px;font-size:12.5px;line-height:1.5;
 }
 .banner .wrap{padding:0}
-.banner b{font-weight:500;color:#412402}
+.banner b{font-weight:700}
+.banner code{background:rgba(27,23,18,.12)}
 .banner.hide{display:none}
+
 .msgbox{
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.6;
-  white-space:pre-wrap;word-break:break-word;background:var(--surface);
-  border:.5px solid var(--border-2);border-radius:var(--radius);padding:14px;max-height:46vh;overflow-y:auto;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;
+  line-height:1.65;white-space:pre-wrap;word-break:break-word;
+  background:#fff;border:1px solid var(--linea-crema);border-radius:var(--r);
+  padding:15px;max-height:46vh;overflow-y:auto;color:var(--tinta);
+}
+
+/* ---------- hoja decorativa ---------- */
+.hoja{display:block;margin:0 auto 6px;opacity:.5}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important;transition:none !important}
 }
 </style>
 </head>
@@ -259,10 +369,10 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
 
 <header data-page-node-id="IFgDpvAhnxbl4oS1IrJXZJ">
   <div class="hd" data-page-node-id="tn67rpWu3KmDpCEbKpBzLv">
-    <div class="logo" id="logo" onclick="toqueLogo()" data-page-node-id="LOzNfhK1QZO8c9H36yJMGS">TE</div>
+    <div class="logo" id="logo" onclick="toqueLogo()" aria-label="Black Tea Lab" data-page-node-id="LOzNfhK1QZO8c9H36yJMGS"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22c0-6.2 2.6-10.8 8.4-13.8C20.2 16.2 16.6 20.1 12 22Z" fill="#C6A15B"/><path d="M12 22c0-6.2-2.6-10.8-8.4-13.8C3.8 16.2 7.4 20.1 12 22Z" fill="#5A6B42"/></svg></div>
     <div class="hd-txt" data-page-node-id="UfNey6ZylyN1svkPHjVMCC">
-      <h1 id="hNombre" data-page-node-id="rQhRDEUb5dDL3Qb3E2Dd0Y">Té Negro Estudio</h1>
-      <p id="hSub" data-page-node-id="wG8kigwLTgr8EdyMZIlzxn">Pedido directo · León, Gto.</p>
+      <h1 id="hNombre" data-page-node-id="rQhRDEUb5dDL3Qb3E2Dd0Y">Black Tea Lab</h1>
+      <p id="hSub" data-page-node-id="wG8kigwLTgr8EdyMZIlzxn">One tea. Many moods.</p>
     </div>
     <span class="pill" id="hPill" data-page-node-id="7Hbml9TG7DlFzNREstz1wZ">Pedido directo</span>
   </div>
@@ -391,12 +501,12 @@ const CONFIG = {
                          // Ver la seccion "Recoleccion" del plan para montarlo.
   },
   negocio: {
-    nombre:   "Té Negro Estudio",
-    lema:     "Pedido directo · León, Gto.",
+    nombre:   "Black Tea Lab",
+    lema:     "One tea. Many moods.",
     // Numero de David. PUBLICO: queda a la vista en el sitio y en el historial
     // de git. Es lo que el cliente necesita para mandar el pedido.
     whatsapp: "526621029106",
-    instagram:"@tenegroestudio",
+    instagram:"@blacktealab",
     // Texto de la etiqueta del encabezado. Va dirigido al CLIENTE, no a ti:
     // nada de "29% ahorrado", que es tu economia interna y confunde al cliente.
     pill:     "Pedido directo"
@@ -440,69 +550,67 @@ const CONFIG = {
 /* =========================================================
    MENU — precio base = vaso de 16 oz. Los tamanos lo ajustan.
    ========================================================= */
+/* =========================================================
+   MENU — Black Tea Lab, tal como el menú impreso.
+   Un precio por bebida (no hay tamaños). La leche solo existe
+   en las bebidas que llevan leche: en un fizz no tiene sentido.
+   ========================================================= */
 const CATS = [
-  { id:"clasicos", nombre:"Clásicos" },
-  { id:"leche",    nombre:"Con leche" },
-  { id:"coldbrew", nombre:"Cold brew" },
-  { id:"origen",   nombre:"Origen único" },
-  { id:"snacks",   nombre:"Para acompañar" }
+  { id:"milk",  nombre:"Milk Tea",        lema:"Rich tea, smooth days",         color:"#C9A87C" },
+  { id:"fruit", nombre:"Fruit Black Tea", lema:"Fruity tea, brighter days",     color:"#E4A55E" },
+  { id:"fizz",  nombre:"Black Tea Fizz",  lema:"Same tea, more sparkle",        color:"#E8C05A" },
+  { id:"sign",  nombre:"Signatures",      lema:"Bold creations, black tea soul", color:"#B57C4A" }
 ];
 
+/* color = el del líquido, para el vaso. foam = capa de crema encima.
+   fizz = burbujas. leche = admite elegir tipo de leche.
+   pop = destacado. */
 const MENU = [
-  { id:"limon", cat:"clasicos", n:"Té negro al limón", d:"Assam, limón recién exprimido. Servido frío.", p:68, pop:true },
-  { id:"durazno", cat:"clasicos", n:"Té negro durazno", d:"Ceylon con durazno natural, sin jarabe artificial.", p:70, pop:true },
-  { id:"zarza", cat:"clasicos", n:"Té negro zarzamora", d:"Ceylon con zarzamora de la región.", p:72 },
-  { id:"chai", cat:"clasicos", n:"Masala chai", d:"Té negro con especias tostadas en casa.", p:72 },
+  { id:"classic",  cat:"milk",  n:"Classic Milk Tea",     d:"Té negro, leche y dulzor ligero.",            p:79,  color:"#C9A87C", foam:true,  leche:true },
+  { id:"brown",    cat:"milk",  n:"Brown Sugar Milk Tea", d:"Té negro, leche y jarabe de azúcar morena.",  p:89,  color:"#A9743E", foam:true,  leche:true, pop:true },
+  { id:"vanilla",  cat:"milk",  n:"Vanilla Milk Tea",     d:"Té negro, leche y vainilla.",                 p:89,  color:"#D6C4A0", foam:true,  leche:true },
+  { id:"caramel",  cat:"milk",  n:"Caramel Milk Tea",     d:"Té negro, leche y caramelo.",                 p:89,  color:"#B0793C", foam:true,  leche:true },
 
-  { id:"assam", cat:"leche", n:"Assam latte", d:"Té negro con leche entera, espumado en frío.", p:78, pop:true },
-  { id:"miel", cat:"leche", n:"Té negro con miel", d:"Assam, leche y miel de abeja de Guanajuato.", p:80 },
-  { id:"london", cat:"leche", n:"London fog", d:"Earl Grey, leche y vainilla.", p:80 },
-  { id:"dirty", cat:"leche", n:"Dirty tea", d:"Cold brew de té negro con shot de espresso.", p:88, tag:"Sube ticket" },
+  { id:"peach",    cat:"fruit", n:"Peach Black Tea",      d:"Té negro + durazno.",                          p:79,  color:"#E8A05C" },
+  { id:"mango",    cat:"fruit", n:"Mango Black Tea",      d:"Té negro + mango.",                            p:79,  color:"#E5B83E" },
+  { id:"passion",  cat:"fruit", n:"Passion Black Tea",    d:"Té negro + maracuyá.",                         p:85,  color:"#DDA02A" },
+  { id:"peachlem", cat:"fruit", n:"Peach Lemon Tea",      d:"Té negro + durazno + limón.",                  p:85,  color:"#E9B060" },
 
-  { id:"cb24", cat:"coldbrew", n:"Cold brew 24 h", d:"Extracción en frío 24 horas. Cero amargor.", p:75, pop:true },
-  { id:"cbCit", cat:"coldbrew", n:"Cold brew cítrico", d:"Cold brew con naranja y romero.", p:80 },
-  { id:"cbAvena", cat:"coldbrew", n:"Cold brew con avena", d:"Cold brew y leche de avena.", p:85 },
-  { id:"cbTon", cat:"coldbrew", n:"Cold brew tónico", d:"Sin alcohol. Burbuja, cítrico y té.", p:85 },
+  { id:"fpeach",   cat:"fizz",  n:"Peach Fizz",           d:"Té negro, durazno y agua mineral.",            p:89,  color:"#EBA968", fizz:true },
+  { id:"fpassion", cat:"fizz",  n:"Passion Fizz",         d:"Té negro, maracuyá y agua mineral.",           p:95,  color:"#DFA22F", fizz:true },
+  { id:"fmango",   cat:"fizz",  n:"Mango Lemon Fizz",     d:"Té negro, mango, limón y agua mineral.",       p:95,  color:"#E7BC4A", fizz:true },
 
-  { id:"darje", cat:"origen", n:"Darjeeling first flush", d:"Origen único. Notas florales, sin azúcar.", p:95, tag:"Especialidad" },
-  { id:"assamOro", cat:"origen", n:"Assam oro", d:"Origen único. Malty, cuerpo completo.", p:95, tag:"Especialidad" },
-  { id:"ceylon", cat:"origen", n:"Ceylon OP", d:"Origen único. Cítrico, ligero, brillante.", p:90 },
-  { id:"earl", cat:"origen", n:"Earl Grey supremo", d:"Bergamota natural, no esencia.", p:90 },
-
-  { id:"galleta", cat:"snacks", n:"Galleta de avena", d:"Horneada el mismo día.", p:35, simple:true },
-  { id:"sand", cat:"snacks", n:"Sándwich de pavo", d:"Pan de masa madre, hecho al momento.", p:85, simple:true },
-  { id:"crois", cat:"snacks", n:"Croissant de almendra", d:"Hojaldre de mantequilla.", p:55, simple:true },
-  { id:"botella", cat:"snacks", n:"Botella 1 L de cold brew", d:"Rinde 3 vasos. Para llevar a casa.", p:150, simple:true, tag:"Rinde 3" }
+  { id:"scream",   cat:"sign",  n:"Brown Sugar Cream Tea", d:"Té negro + leche + azúcar morena + cream foam.", p:105, color:"#A9743E", foam:true, leche:true, pop:true },
+  { id:"pcream",   cat:"sign",  n:"Peach Cream Tea",       d:"Té negro + durazno + cream foam.",              p:99,  color:"#E8A05C", foam:true },
+  { id:"passcream",cat:"sign",  n:"Passion Cream Tea",     d:"Té negro + maracuyá + cream foam.",             p:105, color:"#DDA02A", foam:true },
+  { id:"velvet",   cat:"sign",  n:"Black Velvet",          d:"Té negro + leche + vainilla + azúcar morena + cream foam.", p:105, color:"#6E4A2E", foam:true, leche:true }
 ];
 
-const TAMANOS = [
-  { id:"12", n:"12 oz", d:-8 },
-  { id:"16", n:"16 oz", d:0 },
-  { id:"20", n:"20 oz", d:13 }
+/* Del menú impreso: Sweetness 0/25/50/75/100% · Ice Regular/Light/No Ice */
+const AZUCARES = [
+  { id:"0",   n:"0%" }, { id:"25",  n:"25%" }, { id:"50", n:"50%" },
+  { id:"75",  n:"75%" }, { id:"100", n:"100%" }
 ];
 const HIELOS = [
-  { id:"sin", n:"Sin hielo" },
-  { id:"poco", n:"Poco" },
-  { id:"normal", n:"Normal" },
-  { id:"extra", n:"Extra" }
+  { id:"regular", n:"Regular" },
+  { id:"light",   n:"Light" },
+  { id:"no",      n:"Sin hielo" }
 ];
-const AZUCARES = [
-  { id:"0", n:"0%" }, { id:"25", n:"25%" }, { id:"50", n:"50%" },
-  { id:"75", n:"75%" }, { id:"100", n:"100%" }
-];
+
+/* OJO: en el menú impreso "leche deslactosada" y "leche vegetal" aparecen bajo
+   EXTRAS, pero son sustituciones, no adiciones: no puedes agregar deslactosada
+   encima de la leche normal. Van como elección de leche. Mismo precio. */
 const LECHES = [
-  { id:"sin", n:"Sin leche", d:0 },
-  { id:"entera", n:"Entera", d:0 },
-  { id:"deslac", n:"Deslactosada", d:0 },
-  { id:"avena", n:"Avena", d:10 },
-  { id:"almendra", n:"Almendra", d:10 }
+  { id:"entera",  n:"Entera",      d:0 },
+  { id:"deslac",  n:"Deslactosada",d:10 },
+  { id:"vegetal", n:"Vegetal",     d:15 }
 ];
+
+/* Los tres extras que sí son adiciones. */
 const TOPPINGS = [
-  { id:"tapioca", n:"Perlas de tapioca", d:12 },
-  { id:"gelatina", n:"Gelatina de café", d:12 },
-  { id:"foam", n:"Cold foam", d:15 },
-  { id:"shot", n:"Extra shot de té", d:12 },
-  { id:"doble", n:"Doble concentración", d:18 }
+  { id:"foam",   n:"Cream foam",   d:15 },
+  { id:"fruit",  n:"Extra fruta",  d:12 },
+  { id:"syrup",  n:"Extra jarabe", d:12 }
 ];
 
 /* =========================================================
@@ -513,7 +621,7 @@ let carrito   = load(LS.cart, []);
 let ordenes   = load(LS.ord, []);
 let cliente   = load(LS.cli, {});
 let recCode   = localStorage.getItem(LS.rec) || null;
-let catActiva = "clasicos";
+let catActiva = "milk";
 let draft     = null;   // producto en edicion dentro del modal
 let vista     = "pedir";
 
@@ -587,110 +695,174 @@ function renderChips(){
 function setCat(id){ catActiva = id; renderChips(); renderLista(); logEvento("categoria_cambio", { categoria: id }); }
 
 function renderLista(){
-  const items = MENU.filter(m => m.cat===catActiva);
-  document.getElementById("lista").innerHTML = items.map(m => {
-    const yaEnCarrito = carrito.filter(l => l.pid===m.id).reduce((s,l)=>s+l.q,0);
-    return '<div class="prod">'
+  const cat = CATS.find(c => c.id === catActiva) || CATS[0];
+  const items = MENU.filter(m => m.cat === catActiva);
+
+  let h = '<div class="cat-head"><h2>' + esc(cat.nombre) + '</h2>'
+        + '<span>' + esc(cat.lema) + '</span></div>';
+
+  h += items.map(m => {
+    const ya = carrito.filter(l => l.pid === m.id).reduce((s,l) => s + l.q, 0);
+    return '<div class="prod" onclick="abrirProducto(\'' + m.id + '\')" role="button" tabindex="0">'
+      + vaso(m, 54)
       + '<div class="prod-b">'
       +   '<div class="prod-n">' + esc(m.n)
-      +     (m.tag ? '<span class="tag">' + esc(m.tag) + '</span>' : '')
-      +     (m.pop ? '<span class="tag g">Más pedido</span>' : '')
+      +     (m.pop ? '<span class="tag">Más pedido</span>' : '')
+      +     (ya ? '<span class="tag g">' + ya + ' en tu pedido</span>' : '')
       +   '</div>'
       +   '<p class="prod-d">' + esc(m.d) + '</p>'
       + '</div>'
       + '<div class="prod-r">'
       +   '<span class="price">' + money0(m.p) + '</span>'
-      +   '<button class="add" onclick="abrirProducto(\'' + m.id + '\')" aria-label="Agregar ' + esc(m.n) + '">+</button>'
+      +   '<span class="add" aria-hidden="true">+</span>'
       + '</div>'
       + '</div>';
   }).join("");
+
+  document.getElementById("lista").innerHTML = h;
 }
 
 /* =========================================================
-   MODAL PRODUCTO
+   EL VASO
+   El color del líquido es el del sabor; la banda clara de
+   arriba es el cream foam; las burbujas son del fizz.
+   Se genera como SVG para no depender de ninguna foto.
+   ========================================================= */
+let vasoN = 0;
+function vaso(m, alto){
+  const uid = "vaso" + (++vasoN);
+  const h = alto || 54;
+  const w = Math.round(h * 0.79);
+  const cuerpo = "M8 8 L13.5 49 Q14 52 17 52 L27 52 Q30 52 30.5 49 L36 8 Z";
+
+  let s = '<svg class="vaso" width="' + w + '" height="' + h + '" viewBox="0 0 44 56" aria-hidden="true">';
+  s += '<defs><clipPath id="' + uid + '"><path d="' + cuerpo + '"/></clipPath></defs>';
+  s += '<path d="' + cuerpo + '" fill="' + (m.color || "#C9A87C") + '"/>';
+
+  if (m.foam){
+    s += '<rect x="6" y="8" width="32" height="13" fill="#F7EFDD" clip-path="url(#' + uid + ')"/>';
+  }
+  if (m.fizz){
+    s += '<g clip-path="url(#' + uid + ')" fill="#FFFFFF" opacity=".5">'
+      +  '<circle cx="17" cy="21" r="2"/><circle cx="26" cy="16" r="1.4"/>'
+      +  '<circle cx="21" cy="31" r="2.2"/><circle cx="29" cy="27" r="1.3"/>'
+      +  '<circle cx="15" cy="39" r="1.5"/><circle cx="24" cy="44" r="1.9"/>'
+      +  '</g>';
+  }
+  s += '<path d="M12 15 L15.5 46" stroke="#FFFFFF" stroke-width="2" opacity=".3" stroke-linecap="round"/>';
+  s += '<rect x="6" y="5" width="32" height="5" rx="2.5" fill="#FFFFFF" opacity=".9"/>';
+  s += '<path d="' + cuerpo + '" fill="none" stroke="rgba(27,23,18,.2)" stroke-width="1"/>';
+  s += '</svg>';
+  return s;
+}
+
+/* =========================================================
+   MODAL DE PRODUCTO
+   Sin tamaños: el menú impreso da un precio por bebida.
+   La leche solo aparece donde la bebida lleva leche.
    ========================================================= */
 function abrirProducto(id){
-  const m = MENU.find(x=>x.id===id);
+  const m = MENU.find(x => x.id === id);
   if (!m) return;
   draft = {
-    pid:m.id, nombre:m.n, base:m.p, simple:!!m.simple, q:1,
-    tam:"16", hielo:"normal", azucar:"50", leche:null, tops:[], nota:""
+    pid: m.id, nombre: m.n, base: m.p,
+    color: m.color, foam: !!m.foam, fizz: !!m.fizz,
+    conLeche: !!m.leche, q: 1,
+    hielo: "regular", azucar: "50",
+    leche: m.leche ? "entera" : null,
+    tops: [], nota: ""
   };
-  if (m.cat==="leche" || m.cat==="coldbrew" || m.cat==="origen") draft.leche = "sin";
   pintarProducto();
   abrir("mProd");
   logEvento("product_open", { pid: m.id, precio: m.p, categoria: m.cat });
 }
 
 function precioDraft(){
-  const t = TAMANOS.find(x=>x.id===draft.tam);
-  let p = draft.base + (t ? t.d : 0);
-  if (draft.leche){
-    const l = LECHES.find(x=>x.id===draft.leche);
+  let p = draft.base;
+  if (draft.conLeche && draft.leche){
+    const l = LECHES.find(x => x.id === draft.leche);
     if (l) p += l.d;
   }
-  draft.tops.forEach(id => { const tp = TOPPINGS.find(x=>x.id===id); if (tp) p += tp.d; });
+  draft.tops.forEach(id => {
+    const t = TOPPINGS.find(x => x.id === id);
+    if (t) p += t.d;
+  });
   return p;
 }
 
 function pintarProducto(){
-  const m = MENU.find(x=>x.id===draft.pid);
-  const conOpciones = !draft.simple;
+  const m = MENU.find(x => x.id === draft.pid);
   const p = precioDraft();
 
-  let h = '<div class="grab"></div>'
-    + '<div class="sh-h">'
-    +   '<div><h2>' + esc(m.n) + '</h2><p>' + esc(m.d) + '</p></div>'
+  let h = '<div class="grab"></div>';
+
+  h += '<div style="display:flex;gap:16px;align-items:flex-start">'
+    +   '<div style="flex:none">' + vaso({ id:draft.pid, color:draft.color, foam:draft.foam, fizz:draft.fizz }, 92) + '</div>'
+    +   '<div style="flex:1;min-width:0">'
+    +     '<h2 style="font-size:22px;line-height:1.15">' + esc(m.n) + '</h2>'
+    +     '<p style="margin:8px 0 0;font-size:12.5px;color:var(--tinta-2);line-height:1.5">' + esc(m.d) + '</p>'
+    +   '</div>'
     +   '<button class="x" onclick="cerrar(\'mProd\')" aria-label="Cerrar">&times;</button>'
     + '</div>';
 
-  if (conOpciones){
-    h += opBlock("Tamaño", TAMANOS, "tam", true);
-    h += opBlock("Hielo", HIELOS, "hielo", false);
-    h += opBlock("Azúcar", AZUCARES, "azucar", false);
-    h += opBlock("Leche", LECHES, "leche", false);
-    h += '<div class="opt-t"><span>Toppings</span><span style="color:var(--hint)">opcional</span></div>'
-      +  '<div class="opts">' + TOPPINGS.map(t =>
-           '<button class="opt' + (draft.tops.indexOf(t.id)>=0?" on":"") + '" onclick="toggleTop(\'' + t.id + '\')">'
-           + esc(t.n) + '<span class="d">+' + money0(t.d) + '</span></button>'
-         ).join("") + '</div>';
-  }
+  h += opBlock("Dulzor", AZUCARES, "azucar", false);
+  h += opBlock("Hielo", HIELOS, "hielo", false);
+  if (draft.conLeche) h += opBlock("Leche", LECHES, "leche", false);
 
-  h += '<label class="f">Nota para la cocina</label>'
+  h += '<div class="opt-t"><span>Extras</span><span style="color:var(--tinta-3)">opcional</span></div>'
+    +  '<div class="opts">' + TOPPINGS.map(t =>
+         '<button class="opt' + (draft.tops.indexOf(t.id) >= 0 ? " on" : "") + '" onclick="toggleTop(\'' + t.id + '\')">'
+         + esc(t.n) + '<span class="d">+' + money0(t.d) + '</span></button>'
+       ).join("") + '</div>';
+
+  h += '<label class="f">Nota para la barra</label>'
     +  '<input type="text" id="dNota" placeholder="Sin popote, aparte el hielo..." value="' + esc(draft.nota) + '" oninput="draft.nota=this.value">';
 
   h += '<div class="opt-t"><span>Cantidad</span></div>'
-    +  '<div class="qty" style="height:36px"><button style="width:36px;height:34px" onclick="draft.q=Math.max(1,draft.q-1);pintarProducto()">&minus;</button>'
-    +  '<span style="min-width:34px">' + draft.q + '</span>'
-    +  '<button style="width:36px;height:34px" onclick="draft.q=Math.min(20,draft.q+1);pintarProducto()">+</button></div>';
+    +  '<div class="qty" style="height:38px">'
+    +  '<button style="width:38px;height:36px" onclick="draft.q=Math.max(1,draft.q-1);pintarProducto()">&minus;</button>'
+    +  '<span style="min-width:36px">' + draft.q + '</span>'
+    +  '<button style="width:38px;height:36px" onclick="draft.q=Math.min(20,draft.q+1);pintarProducto()">+</button></div>';
 
-  h += '<div class="mt"><button class="btn" onclick="confirmarProducto()">'
-    +  'Agregar ' + money(p*draft.q) + '</button></div>';
+  h += '<div class="mt" style="margin-top:24px"><button class="btn" onclick="confirmarProducto()">'
+    +  'Agregar ' + money(p * draft.q) + '</button></div>';
 
   document.getElementById("prodSheet").innerHTML = h;
 }
 
 function opBlock(titulo, lista, campo, req){
-  return '<div class="opt-t"><span>' + titulo + '</span>' + (req?'<span class="req">requerido</span>':'') + '</div>'
+  return '<div class="opt-t"><span>' + titulo + '</span>'
+    + (req ? '<span class="req">requerido</span>' : '') + '</div>'
     + '<div class="opts">' + lista.map(o =>
-        '<button class="opt' + (draft[campo]===o.id?" on":"") + '" onclick="setOpt(\'' + campo + '\',\'' + o.id + '\')">'
-        + esc(o.n) + (o.d ? '<span class="d">' + (o.d>0?"+":"") + money0(o.d) + '</span>' : '') + '</button>'
+        '<button class="opt' + (draft[campo] === o.id ? " on" : "") + '" onclick="setOpt(\'' + campo + '\',\'' + o.id + '\')">'
+        + esc(o.n) + (o.d ? '<span class="d">+' + money0(o.d) + '</span>' : '') + '</button>'
       ).join("") + '</div>';
 }
 function setOpt(campo, val){ draft[campo] = val; pintarProducto(); }
 function toggleTop(id){
   const i = draft.tops.indexOf(id);
-  if (i>=0) draft.tops.splice(i,1); else draft.tops.push(id);
+  if (i >= 0) draft.tops.splice(i, 1); else draft.tops.push(id);
   pintarProducto();
 }
 
 function resumenOpciones(l){
   const parts = [];
-  if (l.tam){ const t = TAMANOS.find(x=>x.id===l.tam); if (t) parts.push(t.n); }
-  if (l.leche && l.leche!=="sin"){ const x = LECHES.find(y=>y.id===l.leche); if (x) parts.push("Leche " + x.n.toLowerCase()); }
-  if (l.azucar!=null){ const a = AZUCARES.find(y=>y.id===l.azucar); if (a) parts.push("Azúcar " + a.n); }
-  if (l.hielo){ const h = HIELOS.find(y=>y.id===l.hielo); if (h) parts.push("Hielo " + h.n.toLowerCase()); }
-  l.tops.forEach(id => { const t = TOPPINGS.find(x=>x.id===id); if (t) parts.push("+" + t.n); });
+  if (l.leche && l.leche !== "entera"){
+    const x = LECHES.find(y => y.id === l.leche);
+    if (x) parts.push("Leche " + x.n.toLowerCase());
+  }
+  if (l.azucar != null){
+    const a = AZUCARES.find(y => y.id === l.azucar);
+    if (a) parts.push("Dulzor " + a.n);
+  }
+  if (l.hielo){
+    const hh = HIELOS.find(y => y.id === l.hielo);
+    if (hh) parts.push("Hielo " + hh.n.toLowerCase());
+  }
+  (l.tops || []).forEach(id => {
+    const t = TOPPINGS.find(x => x.id === id);
+    if (t) parts.push("+" + t.n);
+  });
   if (l.nota) parts.push("Nota: " + l.nota);
   return parts.join(" · ");
 }
@@ -698,19 +870,16 @@ function resumenOpciones(l){
 function confirmarProducto(){
   const p = precioDraft();
   const linea = {
-    pid:draft.pid, nombre:draft.nombre, pu:p, q:draft.q,
-    tam:draft.simple?null:draft.tam,
-    hielo:draft.simple?null:draft.hielo,
-    azucar:draft.simple?null:draft.azucar,
-    leche:draft.simple?null:draft.leche,
-    tops:draft.simple?[]:draft.tops.slice(),
-    nota:draft.nota
+    pid: draft.pid, nombre: draft.nombre, pu: p, q: draft.q,
+    color: draft.color, foam: draft.foam, fizz: draft.fizz,
+    hielo: draft.hielo, azucar: draft.azucar,
+    leche: draft.leche, tops: draft.tops.slice(), nota: draft.nota
   };
-  const key = JSON.stringify([linea.pid,linea.tam,linea.hielo,linea.azucar,linea.leche,linea.tops,linea.nota]);
-  const ex = carrito.find(l => l.key===key);
-  if (ex) ex.q += linea.q; else carrito.push(Object.assign({key:key}, linea));
+  const key = JSON.stringify([linea.pid, linea.hielo, linea.azucar, linea.leche, linea.tops, linea.nota]);
+  const ex = carrito.find(l => l.key === key);
+  if (ex) ex.q += linea.q; else carrito.push(Object.assign({ key: key }, linea));
   save(); pintarBadge(); renderLista(); cerrar("mProd");
-  logEvento("product_add", { pid: linea.pid, precio: linea.pu, cantidad: linea.q, toppings: linea.tops.length });
+  logEvento("product_add", { pid: linea.pid, precio: linea.pu, cantidad: linea.q, extras: linea.tops.length });
 }
 
 /* =========================================================
@@ -777,7 +946,7 @@ function renderCarrito(){
     + '<option value="">Elige tu zona...</option>'
     + CONFIG.envio.zonas.map(z =>
         '<option value="' + z.id + '"' + (cliente.zonaId===z.id?" selected":"") + '>'
-        + esc(z.nombre) + ' — ' + money0(z.costo) + ' · ' + z.min + ' min</option>'
+        + esc(z.nombre) + ' · ' + money0(z.costo) + '</option>'
       ).join("")
     + '</select>'
     + (gratis ? '<div class="note" style="margin-top:10px">Ya llevas más de ' + money0(CONFIG.envio.gratisDesde) + '. <b>Envío gratis.</b></div>' : '')
@@ -984,7 +1153,7 @@ function enviar(){
   msg += "Pedido directo (canal propio)\n\n";
 
   carrito.forEach(l => {
-    msg += l.q + "× " + l.nombre + (l.tam ? " (" + (TAMANOS.find(t=>t.id===l.tam)||{}).n + ")" : "") + "\n";
+    msg += l.q + "× " + l.nombre + "\n";
     const o = resumenOpciones(l);
     if (o) msg += "   " + o + "\n";
     msg += "   " + money(l.pu*l.q) + "\n\n";
@@ -1366,9 +1535,9 @@ function bloqueSEQ(){
   if (s.seq !== null) return '<div id="seqBox"><div class="note">Ya nos dijiste que fue ' + s.seq + ' de 7. Gracias.</div></div>';
   let h = '<div class="sec-t">Una pregunta rápida</div><div class="card">'
     + '<div style="font-size:13.5px;margin-bottom:12px">¿Qué tan fácil fue armar tu pedido?</div>'
-    + '<div class="opts">';
+    + '<div class="opts seq">';
   for (let i = 1; i <= 7; i++) h += '<button class="opt" onclick="responderSEQ(' + i + ')">' + i + '</button>';
-  h += '</div><div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--hint);margin-top:6px">'
+  h += '</div><div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--tinta-3);margin-top:7px">'
     +  '<span>Muy difícil</span><span>Muy fácil</span></div></div>';
   return '<div id="seqBox">' + h + '</div>';
 }
