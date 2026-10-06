@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="es-MX" data-page-node-id="qmpvBrjXePNfy2d9RBm2pB">
+<head data-page-node-id="W9nLyRdPt2bP9Ss6466Mlh">
+<meta charset="utf-8" data-page-node-id="HjRKluwhKL2eoPVnkZTa3D">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" data-page-node-id="gLtUEuLXsECfzlVHN6DKL5">
+<title>Pedidos directos — Té Negro Estudio</title>
+<style>
+:root{
+  --bg:#F7F6F3;
+  --surface:#FFFFFF;
+  --surface-2:#F1EFE8;
+  --border:rgba(0,0,0,.10);
+  --border-2:rgba(0,0,0,.18);
+  --text:#1F1E1B;
+  --muted:#6B6A66;
+  --hint:#9A9892;
+  --accent:#0F6E56;
+  --accent-soft:#E1F5EE;
+  --accent-dark:#04342C;
+  --amber:#BA7517;
+  --amber-soft:#FAEEDA;
+  --danger:#A32D2D;
+  --danger-soft:#FCEBEB;
+  --radius:12px;
+  --radius-lg:16px;
+  --shadow:0 1px 2px rgba(0,0,0,.05), 0 8px 24px rgba(0,0,0,.06);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:15px;line-height:1.5;
+  padding-bottom:150px;
+}
+h1,h2,h3{font-weight:500;margin:0}
+button{font-family:inherit;font-size:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font-family:inherit;font-size:15px;color:var(--text)}
+.wrap{max-width:520px;margin:0 auto;padding:0 16px}
+
+/* ---------- header ---------- */
+header{
+  background:var(--surface);border-bottom:.5px solid var(--border);
+  position:sticky;top:0;z-index:40;
+}
+.hd{display:flex;align-items:center;gap:10px;padding:12px 16px;max-width:520px;margin:0 auto}
+.logo{
+  width:36px;height:36px;border-radius:10px;background:var(--accent);
+  display:flex;align-items:center;justify-content:center;flex:none;
+  color:#fff;font-size:14px;font-weight:500;letter-spacing:.5px;
+}
+.hd-txt h1{font-size:15px}
+.hd-txt p{margin:0;font-size:12px;color:var(--muted)}
+.pill{
+  margin-left:auto;font-size:11px;padding:4px 9px;border-radius:999px;
+  background:var(--accent-soft);color:var(--accent-dark);white-space:nowrap;
+}
+
+/* ---------- tabs ---------- */
+nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  background:var(--surface);border-top:.5px solid var(--border);
+  padding:6px 0 max(6px,env(safe-area-inset-bottom));
+}
+.tabs{display:flex;max-width:520px;margin:0 auto}
+.tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:6px 0;font-size:11px;color:var(--muted);
+}
+.tab .ic{width:20px;height:20px;border:.5px solid var(--border-2);border-radius:6px}
+.tab.on{color:var(--accent);font-weight:500}
+.tab.on .ic{background:var(--accent-soft);border-color:var(--accent)}
+.badge{
+  position:absolute;transform:translate(14px,-6px);
+  background:var(--danger);color:#fff;font-size:10px;font-weight:500;
+  min-width:16px;height:16px;border-radius:999px;display:flex;
+  align-items:center;justify-content:center;padding:0 4px;
+}
+.badge.hide{display:none}
+
+/* ---------- generic ---------- */
+.sec-t{font-size:13px;color:var(--muted);margin:22px 0 10px;letter-spacing:.02em}
+.card{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+.view{display:none}
+.view.on{display:block}
+.mt{margin-top:14px}
+
+/* ---------- chips ---------- */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;padding:7px 14px;border-radius:999px;font-size:13px;
+  background:var(--surface);border:.5px solid var(--border);color:var(--muted);
+  white-space:nowrap;
+}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ---------- product ---------- */
+.prod{
+  display:flex;gap:12px;align-items:flex-start;padding:14px 0;
+  border-bottom:.5px solid var(--border);
+}
+.prod:last-child{border-bottom:none}
+.prod-b{flex:1;min-width:0}
+.prod-n{font-size:14px;font-weight:500;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.prod-d{font-size:12.5px;color:var(--muted);margin:3px 0 0}
+.tag{font-size:10px;padding:2px 7px;border-radius:999px;background:var(--amber-soft);color:var(--amber);font-weight:500}
+.tag.g{background:var(--accent-soft);color:var(--accent-dark)}
+.prod-r{display:flex;align-items:center;gap:10px;flex:none;padding-top:2px}
+.price{font-size:14px;font-weight:500;white-space:nowrap}
+.add{
+  width:30px;height:30px;border-radius:999px;background:var(--accent);color:#fff;
+  font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;
+}
+
+/* ---------- cart ---------- */
+.line{display:flex;gap:12px;padding:12px 0;border-bottom:.5px solid var(--border)}
+.line:last-child{border-bottom:none}
+.line-b{flex:1;min-width:0}
+.line-n{font-size:13.5px;font-weight:500}
+.line-o{font-size:12px;color:var(--muted);margin-top:2px}
+.qty{display:flex;align-items:center;gap:0;border:.5px solid var(--border-2);border-radius:999px;overflow:hidden;height:30px;flex:none}
+.qty button{width:28px;height:28px;font-size:16px;color:var(--muted)}
+.qty span{min-width:22px;text-align:center;font-size:13px;font-weight:500}
+.sum{display:flex;justify-content:space-between;font-size:13.5px;padding:5px 0;color:var(--muted)}
+.sum.big{font-size:16px;font-weight:500;color:var(--text);padding-top:10px;margin-top:6px;border-top:.5px solid var(--border)}
+.sum .pos{color:var(--accent)}
+.sum .neg{color:var(--danger)}
+
+/* ---------- forms ---------- */
+label.f{display:block;font-size:12px;color:var(--muted);margin:12px 0 5px}
+input[type=text],input[type=tel],select,textarea{
+  width:100%;padding:11px 12px;border:.5px solid var(--border-2);
+  border-radius:var(--radius);background:var(--surface);outline:none;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--accent)}
+textarea{resize:vertical;min-height:64px}
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:500;
+  background:var(--accent);color:#fff;
+}
+.btn.sec{background:var(--surface);border:.5px solid var(--border-2);color:var(--text)}
+.btn:disabled{opacity:.4}
+.btn.wa{background:#1FA855}
+
+/* ---------- cart bar ---------- */
+.cartbar{
+  position:fixed;left:0;right:0;bottom:64px;z-index:45;
+  padding:0 16px 10px;pointer-events:none;
+}
+.cartbar .inner{
+  max-width:520px;margin:0 auto;pointer-events:auto;
+  background:var(--accent-dark);color:#fff;border-radius:var(--radius-lg);
+  padding:13px 16px;display:flex;align-items:center;gap:12px;
+  box-shadow:var(--shadow);cursor:pointer;
+}
+.cartbar .n{font-size:11px;opacity:.7}
+.cartbar .v{font-size:16px;font-weight:500}
+.cartbar .go{margin-left:auto;font-size:13px;opacity:.9}
+.cartbar.hide{display:none}
+
+/* ---------- modal ---------- */
+.scrim{
+  position:fixed;inset:0;background:rgba(20,20,18,.42);z-index:60;
+  display:none;align-items:flex-end;justify-content:center;
+}
+.scrim.on{display:flex}
+.sheet{
+  background:var(--bg);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;
+  border-radius:20px 20px 0 0;padding:8px 16px 24px;
+  animation:up .22s ease-out;
+}
+@keyframes up{from{transform:translateY(18px);opacity:.6}to{transform:none;opacity:1}}
+.grab{width:38px;height:4px;border-radius:99px;background:var(--border-2);margin:8px auto 14px}
+.sh-h{display:flex;align-items:flex-start;gap:12px;margin-bottom:4px}
+.sh-h h2{font-size:17px}
+.sh-h p{margin:4px 0 0;font-size:13px;color:var(--muted)}
+.x{margin-left:auto;font-size:22px;color:var(--hint);line-height:1;padding:0 4px}
+.opt-t{font-size:12px;color:var(--muted);margin:18px 0 8px;display:flex;justify-content:space-between}
+.opt-t .req{color:var(--danger);font-size:11px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{
+  padding:9px 14px;border-radius:var(--radius);font-size:13px;
+  background:var(--surface);border:.5px solid var(--border);color:var(--muted);
+}
+.opt.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-dark);font-weight:500}
+.opt .d{font-size:11px;opacity:.75;margin-left:5px}
+
+/* ---------- pagos ---------- */
+.pays{display:flex;flex-direction:column;gap:8px}
+.pay{
+  display:flex;align-items:center;gap:12px;text-align:left;width:100%;
+  padding:13px 14px;border-radius:var(--radius);
+  background:var(--surface);border:.5px solid var(--border);
+}
+.pay.on{border-color:var(--accent);background:var(--accent-soft)}
+.radio{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border-2);flex:none;position:relative}
+.pay.on .radio{border-color:var(--accent)}
+.pay.on .radio:after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--accent)}
+.pay-b{flex:1;min-width:0}
+.pay-n{font-size:13.5px;font-weight:500;display:block}
+.pay-c{font-size:11.5px;color:var(--muted);display:block;margin-top:2px}
+.pay.on .pay-c{color:var(--accent-dark)}
+.pay-c.free{color:var(--accent)}
+.clabe{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;
+  letter-spacing:.06em;background:var(--surface);border:.5px solid var(--border-2);
+  border-radius:var(--radius);padding:12px;text-align:center;user-select:all;
+}
+.copy{font-size:12px;color:var(--accent);padding:6px 0 0;text-align:center;display:block;width:100%}
+
+/* ---------- negocio ---------- */
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.metric{background:var(--surface);border:.5px solid var(--border);border-radius:var(--radius);padding:13px}
+.metric .l{font-size:11.5px;color:var(--muted)}
+.metric .v{font-size:20px;font-weight:500;margin-top:3px}
+.metric.hi{background:var(--accent-soft);border-color:transparent}
+.metric.hi .v{color:var(--accent-dark)}
+.ord{border:.5px solid var(--border);border-radius:var(--radius);background:var(--surface);padding:13px;margin-bottom:10px}
+.ord-h{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+.ord-f{font-size:13px;font-weight:500}
+.ord-d{font-size:11.5px;color:var(--hint);margin-left:auto}
+.ord-i{font-size:12.5px;color:var(--muted);padding:2px 0}
+.ord-t{display:flex;justify-content:space-between;font-size:13.5px;font-weight:500;margin-top:9px;padding-top:9px;border-top:.5px solid var(--border)}
+.empty{text-align:center;color:var(--hint);font-size:13px;padding:34px 16px}
+.note{font-size:12px;color:var(--muted);background:var(--surface-2);border-radius:var(--radius);padding:12px;margin-top:10px}
+.note b{font-weight:500;color:var(--text)}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:var(--surface-2);padding:1px 5px;border-radius:4px}
+.ok{width:52px;height:52px;border-radius:50%;background:var(--accent-soft);border:1.5px solid var(--accent);margin:0 auto 14px;position:relative}
+.ok:after{content:"";position:absolute;left:17px;top:14px;width:14px;height:8px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg)}
+.code{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:22px;font-weight:500;
+  letter-spacing:.14em;text-align:center;background:var(--surface);border:1px dashed var(--accent);
+  border-radius:var(--radius);padding:14px;color:var(--accent-dark);
+}
+/* ---------- modo prueba ---------- */
+.banner{
+  background:var(--amber-soft);border-bottom:.5px solid rgba(186,117,23,.28);
+  padding:10px 16px;font-size:12.5px;color:#633806;line-height:1.45;
+}
+.banner .wrap{padding:0}
+.banner b{font-weight:500;color:#412402}
+.banner.hide{display:none}
+.msgbox{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;line-height:1.6;
+  white-space:pre-wrap;word-break:break-word;background:var(--surface);
+  border:.5px solid var(--border-2);border-radius:var(--radius);padding:14px;max-height:46vh;overflow-y:auto;
+}
+</style>
+</head>
+<body data-page-node-id="aBCdTHrFNacA4TOP9VT9UG">
+
+<div class="banner hide" id="bannerPrueba" data-page-node-id="bnr0000000000000001">
+  <div class="wrap"><b>Modo prueba.</b> El botón no manda nada: te muestra el mensaje exacto que recibirías. Cuando tengas tu WhatsApp y tu CLABE en <code>CONFIG</code>, apaga <code>modoPrueba</code>.</div>
+</div>
+
+<header data-page-node-id="IFgDpvAhnxbl4oS1IrJXZJ">
+  <div class="hd" data-page-node-id="tn67rpWu3KmDpCEbKpBzLv">
+    <div class="logo" data-page-node-id="LOzNfhK1QZO8c9H36yJMGS">TE</div>
+    <div class="hd-txt" data-page-node-id="UfNey6ZylyN1svkPHjVMCC">
+      <h1 id="hNombre" data-page-node-id="rQhRDEUb5dDL3Qb3E2Dd0Y">Té Negro Estudio</h1>
+      <p id="hSub" data-page-node-id="wG8kigwLTgr8EdyMZIlzxn">Pedido directo · León, Gto.</p>
+    </div>
+    <span class="pill" id="hPill" data-page-node-id="7Hbml9TG7DlFzNREstz1wZ">Sin comisión</span>
+  </div>
+</header>
+
+<!-- ============ PEDIR ============ -->
+<section class="view on" id="v-pedir" data-page-node-id="ziEYI6Ay2GYlZcQIHCzAVt">
+  <div class="wrap" data-page-node-id="12vANOvbs54yyMGCZ83xLV">
+    <div class="chips" id="chips" data-page-node-id="eemsEi7pDk1KOUntDWZFFl"></div>
+    <div id="lista" data-page-node-id="LrN55xdjfJHXtScTbqGmyH"></div>
+    <div class="note" style="margin:22px 0 4px" data-page-node-id="GGKaOt8tAQVpuqIUydZFSq">
+      <b data-page-node-id="xkouiEV9y6yRjlNYR9vYB7">Pides directo con nosotros.</b> Este pedido no pasa por ninguna app, así que el 100% se queda en el negocio y el precio es el mismo de siempre.
+    </div>
+  </div>
+</section>
+
+<!-- ============ CARRITO ============ -->
+<section class="view" id="v-carrito" data-page-node-id="m2PmIgmJz1IreocfhwHDVW">
+  <div class="wrap" data-page-node-id="xejjCfMMmFkMNLCb5pSpHu">
+    <div id="cartBody" data-page-node-id="GyaefPZpJYOitoxQ5cDTNW"></div>
+  </div>
+</section>
+
+<!-- ============ NEGOCIO ============ -->
+<section class="view" id="v-negocio" data-page-node-id="Czgh0vink850pfEONOsTD2">
+  <div class="wrap" data-page-node-id="eH4TdwS4PrnI4kzkOnNVS9">
+    <div class="sec-t" data-page-node-id="q7RnMvdKhe97Y6RblmLGl1">Hoy</div>
+    <div class="metrics" id="metrics" data-page-node-id="d7vvTk7OVQsEV4FW03yG6z"></div>
+
+    <div class="sec-t">Cuánto te habría costado cobrar hoy</div>
+    <div id="cobros"></div>
+
+    <div class="sec-t" data-page-node-id="pAIZtTAAx5GXEpCA9C2zb5">Pedidos guardados en este dispositivo</div>
+    <div id="ordenes" data-page-node-id="k8OzdDT8rh5aPoQJ6Uhmqi"></div>
+
+    <div class="sec-t" data-page-node-id="aKg0HeGbdSk9k2QTGqs1UQ">Antes de publicarlo</div>
+    <div class="note" data-page-node-id="FIhjPu4M8TdETamm2G8fvr">
+      <b data-page-node-id="LY3TOXqAEWT8YAl5CBa5W5">1. Tu WhatsApp.</b> En <code data-page-node-id="bmmZGuTS4LsZaDuw2pr2q0">CONFIG.negocio.whatsapp</code> pon <code data-page-node-id="LwjABmM2x2iIaj8xG3iaRP">52</code> seguido de tus 10 dígitos, sin espacios ni signos.<br data-page-node-id="fjPZ6lRM2hHeSg4ZMdAndQ"><br data-page-node-id="OB9rJEGrHHyrGCSwO6xjyZ">
+      <b data-page-node-id="nltIQoGsLoRG8pUwVgRWCv">2. Precios y menú.</b> Todo el catálogo está en el bloque <code data-page-node-id="Zflma4GKQaxQyEakeUoOaf">MENU</code>, con precio base del vaso de 16 oz.<br data-page-node-id="G37TOULydMLOz77ezc0qrq"><br data-page-node-id="nOoxYgTOcRQoRQDk8hlyvp">
+      <b>3. Zonas de envío.</b> En <code>CONFIG.envio.zonas</code> ajusta colonias y costos a los tuyos.<br><br>
+      <b>4. Cómo cobras.</b> En <code>CONFIG.pagos</code> pon tu <code>clabe</code>, tu banco y tu <code>titular</code>, y si tienes, tu <code>linkPago</code>. El <code>descuentoPct</code> es el descuento por pagar en efectivo o por transferencia. Nunca lo conviertas en recargo por tarjeta: eso es ilegal.<br><br>
+      <b>5. Publícalo.</b> Súbelo a Netlify Drop, Vercel o GitHub Pages —cualquiera gratis— y pon el enlace en tu Instagram y en la descripción de WhatsApp.
+    </div>
+    <div class="note" data-page-node-id="3jOtk1SKvbETT5I9s2n7Up">
+      <b data-page-node-id="LsYF8IbVsDavTqSWFKGH4t">El punto del canal propio:</b> cada pedido que entra aquí te ahorra la comisión de la app. La métrica de arriba la calcula al 29% efectivo (25% de plan con reparto + IVA sobre la comisión).
+    </div>
+    <div class="mt" style="display:flex;gap:10px" data-page-node-id="PfOoXprxRrGKXawZV1IEMM">
+      <button class="btn sec" onclick="sembrarDemo()" data-page-node-id="pMSOpFP1R6ckgcplAiRomP">Cargar pedidos de ejemplo</button>
+      <button class="btn sec" onclick="borrarTodo()" data-page-node-id="OkUVJpX2LSt11tcpIEa0EC">Borrar todo</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BARRA CARRITO ============ -->
+<div class="cartbar hide" id="cartbar" onclick="ir('carrito')" data-page-node-id="Y0VBH2ZKCT4VFFxmNCdZic">
+  <div class="inner" data-page-node-id="btGJeGzbC8EmAXBpht9pBx">
+    <div data-page-node-id="bpIAeqHJ1skVl0Xp82sU1I">
+      <div class="n" id="cbN" data-page-node-id="vT0aUywdMMLGmX0HcGdjsV">0 artículos</div>
+      <div class="v" id="cbV" data-page-node-id="0zeE2JIX2FJbSa1BCXYzd9">$0</div>
+    </div>
+    <div class="go" data-page-node-id="dnXftpbyTSERq8y11BP45r">Ver pedido →</div>
+  </div>
+</div>
+
+<!-- ============ TABS ============ -->
+<nav data-page-node-id="jdpak9GvJqcu9NwxomgUCV">
+  <div class="tabs" data-page-node-id="CtnA4kPP9fdM00VULxCvh0">
+    <button class="tab on" id="t-pedir" onclick="ir('pedir')" data-page-node-id="JcULQG3a783fE4CV0iQnpK">
+      <span class="ic" data-page-node-id="W7ZWzkZ1iNtIoCZhqkMXCI"></span>Menú
+    </button>
+    <button class="tab" id="t-carrito" onclick="ir('carrito')" data-page-node-id="l3BpFuiYxT79CZcK8huWQ8">
+      <span class="ic" data-page-node-id="qwJyEDvnluiwtecAFMdRHH"></span>Mi pedido
+      <span class="badge hide" id="tabBadge" data-page-node-id="RX8UanYU28EOHV2oPctUrV">0</span>
+    </button>
+    <button class="tab" id="t-negocio" onclick="ir('negocio')" data-page-node-id="yfpM5cn5SDlLLCxqCxbGIN">
+      <span class="ic" data-page-node-id="eGWKZIbPMS0WDWtJn8yeKT"></span>Negocio
+    </button>
+  </div>
+</nav>
+
+<!-- ============ MODAL PRODUCTO ============ -->
+<div class="scrim" id="mProd" onclick="if(event.target===this)cerrar('mProd')" data-page-node-id="ZhmPpdGQ7ikPGfbTUknuuj">
+  <div class="sheet" id="prodSheet" data-page-node-id="4FpsT2NWezhU7lUSUUAtaf"></div>
+</div>
+
+<!-- ============ MODAL EXITO ============ -->
+<div class="scrim" id="mOk" onclick="if(event.target===this)cerrar('mOk')" data-page-node-id="2LFDMBHF5t22SbCXiPVqh5">
+  <div class="sheet" id="okSheet" data-page-node-id="kMs3Bkpw3oVH3Ptm64iztC"></div>
+</div>
+
+<!-- ============ MODAL MENSAJE (modo prueba) ============ -->
+<div class="scrim" id="mMsg" onclick="if(event.target===this)cerrar('mMsg')">
+  <div class="sheet" id="msgSheet"></div>
+</div>
+
+<script>
+/* =========================================================
+   CONFIG — cambia esto y ya. Es lo unico que necesitas tocar.
+   ========================================================= */
+const CONFIG = {
+  // MODO PRUEBA: con true, el boton NO abre WhatsApp. Muestra en pantalla el
+  // mensaje exacto que se enviaria. Ponlo en false cuando ya tengas tu numero.
+  modoPrueba: true,
+  negocio: {
+    nombre:   "Té Negro Estudio",
+    lema:     "Pedido directo · León, Gto.",
+    // VACIO A PROPOSITO hasta que David ponga el suyo. Con este campo vacio la
+    // app NO puede abrir WhatsApp: avisa en pantalla en vez de mandar el pedido
+    // a un numero ajeno.
+    whatsapp: "",
+    instagram:"@tenegroestudio"
+  },
+  envio: {
+    gratisDesde: 300,           // envio gratis a partir de este subtotal
+    zonas: [
+      { id:"centro",    nombre:"Centro / Zona Piel",              costo:30, min:25 },
+      { id:"moral",     nombre:"Jardines del Moral / Campestre",  costo:35, min:30 },
+      { id:"palmas",    nombre:"Las Palmas / San Jerónimo",       costo:35, min:30 },
+      { id:"lomas",     nombre:"Lomas de Angelópolis / P. Hierro",costo:45, min:40 },
+      { id:"poligono",  nombre:"Polígono Bicentenario / Villas S.J.", costo:40, min:35 },
+      { id:"coecillo",  nombre:"Coecillo / San Miguel / L. Moderno", costo:30, min:25 },
+      { id:"otro",      nombre:"Otra colonia (te confirmo)",      costo:50, min:45 }
+    ]
+  },
+  costos: {
+    insumosPct: 26,   // % del precio de venta que se va en te, leche, jarabes, hielo
+    empaque:    10,   // pesos por vaso: vaso, tapa, popote, sello, bolsa, etiqueta
+    comisionApp: 29   // % efectivo que te cobraria la app (25% plan + IVA s/ comision)
+  },
+  recompra: {
+    pct: 10,          // descuento para cliente que regresa
+    minimo: 120       // subtotal minimo para aplicar
+  },
+  pagos: {
+    // REGLA LEGAL: nunca cobres recargo por pagar con tarjeta. Es ilegal
+    // (art. 7 Bis de la Ley Federal de Proteccion al Consumidor). Lo que SI
+    // se puede es dar descuento por efectivo o transferencia. Por eso este
+    // parametro es un DESCUENTO y no un recargo.
+    descuentoPct: 4,
+    clabe:    "",                        // <-- TU CLABE, 18 digitos
+    banco:    "",
+    titular:  "",
+    linkPago: "",                        // <-- tu link de Clip o Mercado Pago, si tienes
+    efectivoMaximo: 1500,                // tope de efectivo que sale con el repartidor
+    comisiones: { clip: 3.6, mpLink: 3.49, mp14: 3.19, mp30: 2.95, mpFijo: 4, iva: 16 }
+  }
+};
+
+/* =========================================================
+   MENU — precio base = vaso de 16 oz. Los tamanos lo ajustan.
+   ========================================================= */
+const CATS = [
+  { id:"clasicos", nombre:"Clásicos" },
+  { id:"leche",    nombre:"Con leche" },
+  { id:"coldbrew", nombre:"Cold brew" },
+  { id:"origen",   nombre:"Origen único" },
+  { id:"snacks",   nombre:"Para acompañar" }
+];
+
+const MENU = [
+  { id:"limon", cat:"clasicos", n:"Té negro al limón", d:"Assam, limón recién exprimido. Servido frío.", p:68, pop:true },
+  { id:"durazno", cat:"clasicos", n:"Té negro durazno", d:"Ceylon con durazno natural, sin jarabe artificial.", p:70, pop:true },
+  { id:"zarza", cat:"clasicos", n:"Té negro zarzamora", d:"Ceylon con zarzamora de la región.", p:72 },
+  { id:"chai", cat:"clasicos", n:"Masala chai", d:"Té negro con especias tostadas en casa.", p:72 },
+
+  { id:"assam", cat:"leche", n:"Assam latte", d:"Té negro con leche entera, espumado en frío.", p:78, pop:true },
+  { id:"miel", cat:"leche", n:"Té negro con miel", d:"Assam, leche y miel de abeja de Guanajuato.", p:80 },
+  { id:"london", cat:"leche", n:"London fog", d:"Earl Grey, leche y vainilla.", p:80 },
+  { id:"dirty", cat:"leche", n:"Dirty tea", d:"Cold brew de té negro con shot de espresso.", p:88, tag:"Sube ticket" },
+
+  { id:"cb24", cat:"coldbrew", n:"Cold brew 24 h", d:"Extracción en frío 24 horas. Cero amargor.", p:75, pop:true },
+  { id:"cbCit", cat:"coldbrew", n:"Cold brew cítrico", d:"Cold brew con naranja y romero.", p:80 },
+  { id:"cbAvena", cat:"coldbrew", n:"Cold brew con avena", d:"Cold brew y leche de avena.", p:85 },
+  { id:"cbTon", cat:"coldbrew", n:"Cold brew tónico", d:"Sin alcohol. Burbuja, cítrico y té.", p:85 },
+
+  { id:"darje", cat:"origen", n:"Darjeeling first flush", d:"Origen único. Notas florales, sin azúcar.", p:95, tag:"Especialidad" },
+  { id:"assamOro", cat:"origen", n:"Assam oro", d:"Origen único. Malty, cuerpo completo.", p:95, tag:"Especialidad" },
+  { id:"ceylon", cat:"origen", n:"Ceylon OP", d:"Origen único. Cítrico, ligero, brillante.", p:90 },
+  { id:"earl", cat:"origen", n:"Earl Grey supremo", d:"Bergamota natural, no esencia.", p:90 },
+
+  { id:"galleta", cat:"snacks", n:"Galleta de avena", d:"Horneada el mismo día.", p:35, simple:true },
+  { id:"sand", cat:"snacks", n:"Sándwich de pavo", d:"Pan de masa madre, hecho al momento.", p:85, simple:true },
+  { id:"crois", cat:"snacks", n:"Croissant de almendra", d:"Hojaldre de mantequilla.", p:55, simple:true },
+  { id:"botella", cat:"snacks", n:"Botella 1 L de cold brew", d:"Rinde 3 vasos. Para llevar a casa.", p:150, simple:true, tag:"Rinde 3" }
+];
+
+const TAMANOS = [
+  { id:"12", n:"12 oz", d:-8 },
+  { id:"16", n:"16 oz", d:0 },
+  { id:"20", n:"20 oz", d:13 }
+];
+const HIELOS = [
+  { id:"sin", n:"Sin hielo" },
+  { id:"poco", n:"Poco" },
+  { id:"normal", n:"Normal" },
+  { id:"extra", n:"Extra" }
+];
+const AZUCARES = [
+  { id:"0", n:"0%" }, { id:"25", n:"25%" }, { id:"50", n:"50%" },
+  { id:"75", n:"75%" }, { id:"100", n:"100%" }
+];
+const LECHES = [
+  { id:"sin", n:"Sin leche", d:0 },
+  { id:"entera", n:"Entera", d:0 },
+  { id:"deslac", n:"Deslactosada", d:0 },
+  { id:"avena", n:"Avena", d:10 },
+  { id:"almendra", n:"Almendra", d:10 }
+];
+const TOPPINGS = [
+  { id:"tapioca", n:"Perlas de tapioca", d:12 },
+  { id:"gelatina", n:"Gelatina de café", d:12 },
+  { id:"foam", n:"Cold foam", d:15 },
+  { id:"shot", n:"Extra shot de té", d:12 },
+  { id:"doble", n:"Doble concentración", d:18 }
+];
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
+const LS = { cart:"tn_cart", ord:"tn_ord", cli:"tn_cli", rec:"tn_rec" };
+let carrito   = load(LS.cart, []);
+let ordenes   = load(LS.ord, []);
+let cliente   = load(LS.cli, {});
+let recCode   = localStorage.getItem(LS.rec) || null;
+let catActiva = "clasicos";
+let draft     = null;   // producto en edicion dentro del modal
+let vista     = "pedir";
+
+function load(k, def){ try { return JSON.parse(localStorage.getItem(k)) || def; } catch(e){ return def; } }
+function save(){ localStorage.setItem(LS.cart, JSON.stringify(carrito)); localStorage.setItem(LS.ord, JSON.stringify(ordenes)); localStorage.setItem(LS.cli, JSON.stringify(cliente)); }
+function money(n){ return "$" + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ","); }
+function money0(n){ return "$" + Math.round(n); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+/* =========================================================
+   NAVEGACION
+   ========================================================= */
+function ir(v){
+  vista = v;
+  ["pedir","carrito","negocio"].forEach(k=>{
+    document.getElementById("v-"+k).classList.toggle("on", k===v);
+    document.getElementById("t-"+k).classList.toggle("on", k===v);
+  });
+  if (v==="carrito") renderCarrito();
+  if (v==="negocio") renderNegocio();
+  document.getElementById("cartbar").classList.toggle("hide", v!=="pedir" || carrito.length===0);
+  window.scrollTo(0,0);
+}
+function abrir(id){ document.getElementById(id).classList.add("on"); }
+function cerrar(id){ document.getElementById(id).classList.remove("on"); }
+
+/* =========================================================
+   CATALOGO
+   ========================================================= */
+function renderChips(){
+  document.getElementById("chips").innerHTML = CATS.map(c =>
+    '<button class="chip' + (c.id===catActiva?" on":"") + '" onclick="setCat(\'' + c.id + '\')">' + esc(c.nombre) + '</button>'
+  ).join("");
+}
+function setCat(id){ catActiva = id; renderChips(); renderLista(); }
+
+function renderLista(){
+  const items = MENU.filter(m => m.cat===catActiva);
+  document.getElementById("lista").innerHTML = items.map(m => {
+    const yaEnCarrito = carrito.filter(l => l.pid===m.id).reduce((s,l)=>s+l.q,0);
+    return '<div class="prod">'
+      + '<div class="prod-b">'
+      +   '<div class="prod-n">' + esc(m.n)
+      +     (m.tag ? '<span class="tag">' + esc(m.tag) + '</span>' : '')
+      +     (m.pop ? '<span class="tag g">Más pedido</span>' : '')
+      +   '</div>'
+      +   '<p class="prod-d">' + esc(m.d) + '</p>'
+      + '</div>'
+      + '<div class="prod-r">'
+      +   '<span class="price">' + money0(m.p) + '</span>'
+      +   '<button class="add" onclick="abrirProducto(\'' + m.id + '\')" aria-label="Agregar ' + esc(m.n) + '">+</button>'
+      + '</div>'
+      + '</div>';
+  }).join("");
+}
+
+/* =========================================================
+   MODAL PRODUCTO
+   ========================================================= */
+function abrirProducto(id){
+  const m = MENU.find(x=>x.id===id);
+  if (!m) return;
+  draft = {
+    pid:m.id, nombre:m.n, base:m.p, simple:!!m.simple, q:1,
+    tam:"16", hielo:"normal", azucar:"50", leche:null, tops:[], nota:""
+  };
+  if (m.cat==="leche" || m.cat==="coldbrew" || m.cat==="origen") draft.leche = "sin";
+  pintarProducto();
+  abrir("mProd");
+}
+
+function precioDraft(){
+  const t = TAMANOS.find(x=>x.id===draft.tam);
+  let p = draft.base + (t ? t.d : 0);
+  if (draft.leche){
+    const l = LECHES.find(x=>x.id===draft.leche);
+    if (l) p += l.d;
+  }
+  draft.tops.forEach(id => { const tp = TOPPINGS.find(x=>x.id===id); if (tp) p += tp.d; });
+  return p;
+}
+
+function pintarProducto(){
+  const m = MENU.find(x=>x.id===draft.pid);
+  const conOpciones = !draft.simple;
+  const p = precioDraft();
+
+  let h = '<div class="grab"></div>'
+    + '<div class="sh-h">'
+    +   '<div><h2>' + esc(m.n) + '</h2><p>' + esc(m.d) + '</p></div>'
+    +   '<button class="x" onclick="cerrar(\'mProd\')" aria-label="Cerrar">&times;</button>'
+    + '</div>';
+
+  if (conOpciones){
+    h += opBlock("Tamaño", TAMANOS, "tam", true);
+    h += opBlock("Hielo", HIELOS, "hielo", false);
+    h += opBlock("Azúcar", AZUCARES, "azucar", false);
+    h += opBlock("Leche", LECHES, "leche", false);
+    h += '<div class="opt-t"><span>Toppings</span><span style="color:var(--hint)">opcional</span></div>'
+      +  '<div class="opts">' + TOPPINGS.map(t =>
+           '<button class="opt' + (draft.tops.indexOf(t.id)>=0?" on":"") + '" onclick="toggleTop(\'' + t.id + '\')">'
+           + esc(t.n) + '<span class="d">+' + money0(t.d) + '</span></button>'
+         ).join("") + '</div>';
+  }
+
+  h += '<label class="f">Nota para la cocina</label>'
+    +  '<input type="text" id="dNota" placeholder="Sin popote, aparte el hielo..." value="' + esc(draft.nota) + '" oninput="draft.nota=this.value">';
+
+  h += '<div class="opt-t"><span>Cantidad</span></div>'
+    +  '<div class="qty" style="height:36px"><button style="width:36px;height:34px" onclick="draft.q=Math.max(1,draft.q-1);pintarProducto()">&minus;</button>'
+    +  '<span style="min-width:34px">' + draft.q + '</span>'
+    +  '<button style="width:36px;height:34px" onclick="draft.q=Math.min(20,draft.q+1);pintarProducto()">+</button></div>';
+
+  h += '<div class="mt"><button class="btn" onclick="confirmarProducto()">'
+    +  'Agregar ' + money(p*draft.q) + '</button></div>';
+
+  document.getElementById("prodSheet").innerHTML = h;
+}
+
+function opBlock(titulo, lista, campo, req){
+  return '<div class="opt-t"><span>' + titulo + '</span>' + (req?'<span class="req">requerido</span>':'') + '</div>'
+    + '<div class="opts">' + lista.map(o =>
+        '<button class="opt' + (draft[campo]===o.id?" on":"") + '" onclick="setOpt(\'' + campo + '\',\'' + o.id + '\')">'
+        + esc(o.n) + (o.d ? '<span class="d">' + (o.d>0?"+":"") + money0(o.d) + '</span>' : '') + '</button>'
+      ).join("") + '</div>';
+}
+function setOpt(campo, val){ draft[campo] = val; pintarProducto(); }
+function toggleTop(id){
+  const i = draft.tops.indexOf(id);
+  if (i>=0) draft.tops.splice(i,1); else draft.tops.push(id);
+  pintarProducto();
+}
+
+function resumenOpciones(l){
+  const parts = [];
+  if (l.tam){ const t = TAMANOS.find(x=>x.id===l.tam); if (t) parts.push(t.n); }
+  if (l.leche && l.leche!=="sin"){ const x = LECHES.find(y=>y.id===l.leche); if (x) parts.push("Leche " + x.n.toLowerCase()); }
+  if (l.azucar!=null){ const a = AZUCARES.find(y=>y.id===l.azucar); if (a) parts.push("Azúcar " + a.n); }
+  if (l.hielo){ const h = HIELOS.find(y=>y.id===l.hielo); if (h) parts.push("Hielo " + h.n.toLowerCase()); }
+  l.tops.forEach(id => { const t = TOPPINGS.find(x=>x.id===id); if (t) parts.push("+" + t.n); });
+  if (l.nota) parts.push("Nota: " + l.nota);
+  return parts.join(" · ");
+}
+
+function confirmarProducto(){
+  const p = precioDraft();
+  const linea = {
+    pid:draft.pid, nombre:draft.nombre, pu:p, q:draft.q,
+    tam:draft.simple?null:draft.tam,
+    hielo:draft.simple?null:draft.hielo,
+    azucar:draft.simple?null:draft.azucar,
+    leche:draft.simple?null:draft.leche,
+    tops:draft.simple?[]:draft.tops.slice(),
+    nota:draft.nota
+  };
+  const key = JSON.stringify([linea.pid,linea.tam,linea.hielo,linea.azucar,linea.leche,linea.tops,linea.nota]);
+  const ex = carrito.find(l => l.key===key);
+  if (ex) ex.q += linea.q; else carrito.push(Object.assign({key:key}, linea));
+  save(); pintarBadge(); renderLista(); cerrar("mProd");
+}
+
+/* =========================================================
+   CARRITO
+   ========================================================= */
+function subtotal(){ return carrito.reduce((s,l)=>s + l.pu*l.q, 0); }
+function nArticulos(){ return carrito.reduce((s,l)=>s + l.q, 0); }
+
+function pintarBadge(){
+  const n = nArticulos();
+  const b = document.getElementById("tabBadge");
+  b.textContent = n;
+  b.classList.toggle("hide", n===0);
+  document.getElementById("cartbar").classList.toggle("hide", vista!=="pedir" || n===0);
+  document.getElementById("cbN").textContent = n + (n===1 ? " artículo" : " artículos");
+  document.getElementById("cbV").textContent = money0(subtotal());
+}
+
+function cambiarQty(i, delta){
+  carrito[i].q += delta;
+  if (carrito[i].q <= 0) carrito.splice(i,1);
+  save(); pintarBadge(); renderCarrito();
+  if (carrito.length===0) ir("pedir");
+}
+
+function renderCarrito(){
+  const el = document.getElementById("cartBody");
+
+  if (carrito.length===0){
+    el.innerHTML = '<div class="empty">Tu pedido está vacío.<br>Regresa al menú y elige algo.</div>'
+      + '<button class="btn sec" onclick="ir(\'pedir\')">Ver el menú</button>';
+    return;
+  }
+
+  const st = subtotal();
+  const zona = CONFIG.envio.zonas.find(z => z.id===(cliente.zonaId||"")) || null;
+  const gratis = st >= CONFIG.envio.gratisDesde;
+  const envio = !zona ? null : (gratis ? 0 : zona.costo);
+  const recOn = recCode && st >= CONFIG.recompra.minimo;
+  const desc = recOn ? st * CONFIG.recompra.pct / 100 : 0;
+  const dPago = descPago(st);
+  const total = st + (envio||0) - desc - dPago;
+
+  let h = '<div class="sec-t" style="margin-top:18px">Tu pedido</div><div class="card">';
+  carrito.forEach((l,i) => {
+    h += '<div class="line">'
+      + '<div class="line-b">'
+      +   '<div class="line-n">' + l.q + '× ' + esc(l.nombre) + '</div>'
+      +   (resumenOpciones(l) ? '<div class="line-o">' + esc(resumenOpciones(l)) + '</div>' : '')
+      + '</div>'
+      + '<div class="qty"><button onclick="cambiarQty(' + i + ',-1)">&minus;</button>'
+      +   '<span>' + l.q + '</span>'
+      +   '<button onclick="cambiarQty(' + i + ',1)">+</button></div>'
+      + '<span class="price">' + money(l.pu*l.q) + '</span>'
+      + '</div>';
+  });
+  h += '</div>';
+
+  /* --- envio --- */
+  h += '<div class="sec-t">Entrega</div><div class="card">'
+    + '<label class="f">Zona</label>'
+    + '<select id="fZona" onchange="setZona(this.value)">'
+    + '<option value="">Elige tu zona...</option>'
+    + CONFIG.envio.zonas.map(z =>
+        '<option value="' + z.id + '"' + (cliente.zonaId===z.id?" selected":"") + '>'
+        + esc(z.nombre) + ' — ' + money0(z.costo) + ' · ' + z.min + ' min</option>'
+      ).join("")
+    + '</select>'
+    + (gratis ? '<div class="note" style="margin-top:10px">Ya llevas más de ' + money0(CONFIG.envio.gratisDesde) + '. <b>Envío gratis.</b></div>' : '')
+    + '</div>';
+
+  /* --- datos --- */
+  h += '<div class="sec-t">Tus datos</div><div class="card">'
+    + '<label class="f">Nombre</label>'
+    + '<input type="text" id="fNom" value="' + esc(cliente.nombre||"") + '" placeholder="Nombre y apellido" oninput="cliente.nombre=this.value;save()">'
+    + '<label class="f">WhatsApp</label>'
+    + '<input type="tel" id="fTel" value="' + esc(cliente.tel||"") + '" placeholder="477 123 4567" oninput="cliente.tel=this.value;save()">'
+    + '<label class="f">Calle, número y referencias</label>'
+    + '<input type="text" id="fDir" value="' + esc(cliente.dir||"") + '" placeholder="Calle, número, color de fachada" oninput="cliente.dir=this.value;save()">'
+    + '</div>';
+
+  /* --- como paga --- */
+  const met = metodo();
+
+  h += '<div class="sec-t">Cómo pagas</div><div class="card"><div class="pays">'
+    + payCard("efectivo", "Efectivo contra entrega",
+        "Sin costo · el repartidor lleva cambio hasta " + money0(CONFIG.pagos.efectivoMaximo), met, true)
+    + payCard("transferencia", "Transferencia SPEI",
+        "Sin costo · mandas tu comprobante", met, true)
+    + payCard("tarjeta", "Tarjeta, link de pago",
+        "El negocio absorbe " + comisionTarjetaPct().toFixed(2) + "% de comisión", met, false)
+    + '</div>';
+
+  if (met === "transferencia"){
+    if (clabeLista()){
+      h += '<label class="f">Transfiere a</label>'
+        +  '<div class="clabe">' + esc(CONFIG.pagos.clabe) + '</div>'
+        +  '<button class="copy" onclick="copiarClabe()">Copiar CLABE</button>'
+        +  '<div class="note">' + esc(CONFIG.pagos.banco) + ' · ' + esc(CONFIG.pagos.titular)
+        +  '<br>Manda el comprobante por WhatsApp al confirmar el pedido.</div>';
+    } else {
+      h += '<div class="note" style="background:var(--danger-soft);color:var(--danger)">Falta tu CLABE en <code>CONFIG.pagos.clabe</code>. Sin eso el cliente no sabe a dónde transferir.</div>';
+    }
+  }
+  if (met === "tarjeta"){
+    if (CONFIG.pagos.linkPago){
+      h += '<label class="f">Link de pago</label>'
+        +  '<a class="btn sec" style="text-decoration:none" href="' + esc(CONFIG.pagos.linkPago)
+        +  '" target="_blank" rel="noopener">Abrir link de pago</a>';
+    } else {
+      h += '<div class="note">Falta configurar <code>linkPago</code> dentro de <code>CONFIG.pagos</code>.</div>';
+    }
+    h += '<div class="note">Por ley no podemos cobrarte más por usar tarjeta, así que la comisión la absorbe el negocio. Si pagas en efectivo o por transferencia, te damos <b>' + CONFIG.pagos.descuentoPct + '% de descuento</b>.</div>';
+  }
+  if (dPago > 0){
+    h += '<div class="note">Estás pagando sin costo para el negocio: <b>' + CONFIG.pagos.descuentoPct + '% de descuento</b> sobre el subtotal.</div>';
+  }
+  h += '</div>';
+
+  /* --- totales --- */
+  h += '<div class="card mt">'
+    + '<div class="sum"><span>Subtotal</span><span>' + money(st) + '</span></div>'
+    + '<div class="sum"><span>Envío' + (zona ? ' · ' + esc(zona.nombre) : '') + '</span><span>'
+    +   (envio===null ? 'por definir' : (envio===0 ? '<span class="pos">Gratis</span>' : money(envio))) + '</span></div>'
+    + (desc>0 ? '<div class="sum"><span>Recompra ' + CONFIG.recompra.pct + '% (' + esc(recCode) + ')</span><span class="neg">−' + money(desc) + '</span></div>' : '')
+    + (dPago>0 ? '<div class="sum"><span>Descuento por pago en ' + (met==="efectivo"?"efectivo":"transferencia") + ' ' + CONFIG.pagos.descuentoPct + '%</span><span class="neg">−' + money(dPago) + '</span></div>' : '')
+    + '<div class="sum big"><span>Total</span><span>' + money(total) + '</span></div>'
+    + '</div>';
+
+  if (recCode && !recOn){
+    h += '<div class="note">Tu código <b>' + esc(recCode) + '</b> aplica desde ' + money0(CONFIG.recompra.minimo) + ' de subtotal.</div>';
+  }
+  if (!recCode){
+    h += '<div class="note">Este es tu primer pedido directo. Al confirmarlo te damos un código de ' + CONFIG.recompra.pct + '% para la próxima.</div>';
+  }
+
+  h += '<div class="mt"><button class="btn wa" id="btnEnviar" onclick="enviar()">'
+    + (CONFIG.modoPrueba ? "Ver el mensaje que se enviaría" : "Enviar pedido por WhatsApp")
+    + '</button></div>'
+    + '<div class="note">' + (CONFIG.modoPrueba
+        ? "Estás en modo prueba: no se abre WhatsApp. Verás el mensaje tal como te llegaría."
+        : "Se abre WhatsApp con el pedido ya escrito. Nosotros confirmamos tiempo de entrega antes de prepararlo.")
+    + '</div>';
+
+  el.innerHTML = h;
+}
+
+function setZona(id){ cliente.zonaId = id; save(); renderCarrito(); }
+
+/* =========================================================
+   PAGOS — descuento, nunca recargo (art. 7 Bis LFPC)
+   ========================================================= */
+function metodo(){
+  const v = cliente.pago;
+  return (v === "transferencia" || v === "tarjeta") ? v : "efectivo";
+}
+function setPago(id){ cliente.pago = id; save(); renderCarrito(); }
+
+function comisionTarjetaPct(){
+  const c = CONFIG.pagos.comisiones;
+  return c.clip * (1 + c.iva / 100);
+}
+/* Sin numero cargado la app NO debe abrir WhatsApp: seria mandarle el pedido a
+   un tercero. Se avisa en pantalla en vez de fallar en silencio. */
+function whatsappListo(){ return /^\d{10,15}$/.test(String(CONFIG.negocio.whatsapp || "")); }
+function clabeLista(){ return /^\d{18}$/.test(String(CONFIG.pagos.clabe || "")); }
+function descPago(st){
+  return metodo() === "tarjeta" ? 0 : st * CONFIG.pagos.descuentoPct / 100;
+}
+
+function payCard(id, nombre, costo, actual, esGratis){
+  return '<button class="pay' + (actual===id ? " on" : "") + '" onclick="setPago(\'' + id + '\')">'
+    + '<span class="radio"></span>'
+    + '<span class="pay-b"><span class="pay-n">' + esc(nombre) + '</span>'
+    + '<span class="pay-c' + (esGratis ? " free" : "") + '">' + esc(costo) + '</span></span>'
+    + '</button>';
+}
+
+function copiarClabe(){
+  const t = CONFIG.pagos.clabe;
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(
+      () => alert("CLABE copiada: " + t),
+      () => alert("CLABE: " + t)
+    );
+  } else {
+    alert("CLABE: " + t);
+  }
+}
+
+/* =========================================================
+   ENVIO DEL PEDIDO
+   ========================================================= */
+function enviar(){
+  const faltan = [];
+  if (!cliente.nombre || !cliente.nombre.trim()) faltan.push("nombre");
+  if (!cliente.tel || cliente.tel.replace(/\D/g,"").length < 10) faltan.push("WhatsApp");
+  if (!cliente.dir || !cliente.dir.trim()) faltan.push("dirección");
+  if (!cliente.zonaId) faltan.push("zona de entrega");
+  if (faltan.length){
+    alert("Falta: " + faltan.join(", ") + ".");
+    return;
+  }
+  if (!CONFIG.modoPrueba && !whatsappListo()){
+    alert("Falta configurar tu WhatsApp en CONFIG.negocio.whatsapp. Sin eso el pedido no tiene a dónde llegar.");
+    return;
+  }
+
+  const st = subtotal();
+  const zona = CONFIG.envio.zonas.find(z=>z.id===cliente.zonaId);
+  const gratis = st >= CONFIG.envio.gratisDesde;
+  const envio = gratis ? 0 : zona.costo;
+  const recOn = recCode && st >= CONFIG.recompra.minimo;
+  const desc = recOn ? st * CONFIG.recompra.pct / 100 : 0;
+  const met = metodo();
+  const dPago = descPago(st);
+  const total = st + envio - desc - dPago;
+
+  const folio = "A" + Date.now().toString(36).slice(-5).toUpperCase();
+
+  let msg = "*NUEVO PEDIDO — " + CONFIG.negocio.nombre + "*\n";
+  msg += "Folio: " + folio + "\n";
+  msg += "Pedido directo (canal propio)\n\n";
+
+  carrito.forEach(l => {
+    msg += l.q + "× " + l.nombre + (l.tam ? " (" + (TAMANOS.find(t=>t.id===l.tam)||{}).n + ")" : "") + "\n";
+    const o = resumenOpciones(l);
+    if (o) msg += "   " + o + "\n";
+    msg += "   " + money(l.pu*l.q) + "\n\n";
+  });
+
+  msg += "Subtotal: " + money(st) + "\n";
+  msg += "Envío (" + zona.nombre + "): " + (envio===0 ? "gratis" : money(envio)) + "\n";
+  if (desc>0) msg += "Descuento recompra " + CONFIG.recompra.pct + "%: −" + money(desc) + "\n";
+  if (dPago>0) msg += "Descuento pago en " + (met==="efectivo" ? "efectivo" : "transferencia") + " " + CONFIG.pagos.descuentoPct + "%: −" + money(dPago) + "\n";
+  msg += "*TOTAL: " + money(total) + "*\n\n";
+
+  msg += "Cliente: " + cliente.nombre + "\n";
+  msg += "WhatsApp: " + cliente.tel + "\n";
+  msg += "Dirección: " + cliente.dir + "\n";
+  msg += "Zona: " + zona.nombre + " (" + zona.min + " min aprox.)\n\n";
+
+  msg += "*PAGO*\n";
+  if (met === "efectivo"){
+    msg += "Efectivo contra entrega. Llevar cambio para " + money(total) + ".\n";
+  } else if (met === "transferencia"){
+    msg += "Transferencia SPEI\n";
+    msg += "CLABE: " + CONFIG.pagos.clabe + "\n";
+    msg += CONFIG.pagos.banco + " · " + CONFIG.pagos.titular + "\n";
+    msg += "Te mando el comprobante por aquí.\n";
+  } else {
+    msg += "Tarjeta, link de pago.\n";
+    if (CONFIG.pagos.linkPago) msg += CONFIG.pagos.linkPago + "\n";
+  }
+
+  const pedido = {
+    folio: folio, fecha: new Date().toISOString(), prueba: !!CONFIG.modoPrueba,
+    lineas: carrito.slice(), subtotal: st, envio: envio, desc: desc, dPago: dPago,
+    metodo: met, total: total,
+    zona: zona.nombre, cliente: { nombre:cliente.nombre, tel:cliente.tel, dir:cliente.dir, pago:met }
+  };
+  ordenes.unshift(pedido);
+  save();
+
+  if (!recCode){
+    recCode = "TE-" + Math.random().toString(36).slice(2,6).toUpperCase();
+    localStorage.setItem(LS.rec, recCode);
+  }
+
+  const url = whatsappListo()
+    ? "https://wa.me/" + CONFIG.negocio.whatsapp + "?text=" + encodeURIComponent(msg)
+    : "(sin número de WhatsApp configurado)";
+
+  carrito = [];
+  save(); pintarBadge(); renderLista();
+
+  if (CONFIG.modoPrueba){
+    mostrarMensaje(msg, pedido, url);
+  } else {
+    window.open(url, "_blank");
+    mostrarExito(pedido);
+  }
+}
+
+/* Modo prueba: muestra el mensaje en pantalla en vez de mandarlo. */
+function mostrarMensaje(msg, p, url){
+  const sinNumero = !whatsappListo();
+
+  document.getElementById("msgSheet").innerHTML =
+    '<div class="grab"></div>'
+    + '<div class="sh-h"><div><h2>Así te llegaría el pedido</h2>'
+    + '<p>Folio <b>' + esc(p.folio) + '</b> · nada se envió todavía</p></div>'
+    + '<button class="x" onclick="cerrar(\'mMsg\')" aria-label="Cerrar">&times;</button></div>'
+
+    + (sinNumero
+        ? '<div class="note" style="background:var(--danger-soft);color:var(--danger)">Todavía no hay número de WhatsApp. El pedido no tiene a dónde llegar. Ponlo en <code>CONFIG.negocio.whatsapp</code> (52 + 10 dígitos, sin espacios) antes de apagar el modo prueba.</div>'
+        : '')
+
+    + '<div class="mt"></div><div class="msgbox">' + esc(msg) + '</div>'
+
+    + '<div class="mt" style="display:flex;gap:10px">'
+    +   '<button class="btn sec" onclick="copiarMensaje()">Copiar el mensaje</button>'
+    +   '<button class="btn sec" onclick="cerrar(\'mMsg\')">Cerrar</button>'
+    + '</div>'
+
+    + '<div class="sec-t">Destino</div>'
+    + '<div class="note" style="word-break:break-all">' + esc(url) + '</div>'
+
+    + '<div class="note">El pedido quedó guardado en el panel <b>Negocio</b> marcado como prueba, para que veas cómo se acumulan las métricas. Bórralo con <b>Borrar todo</b> cuando termines.</div>';
+
+  window.__ultimoMensaje = msg;
+  abrir("mMsg");
+}
+
+function copiarMensaje(){
+  const t = window.__ultimoMensaje || "";
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(
+      () => alert("Mensaje copiado."),
+      () => alert("No se pudo copiar. Selecciónalo a mano.")
+    );
+  } else {
+    alert("No se pudo copiar. Selecciónalo a mano.");
+  }
+}
+
+function mostrarExito(p){
+  const margen = p.subtotal - (p.subtotal*CONFIG.costos.insumosPct/100) - (CONFIG.costos.empaque * p.lineas.reduce((s,l)=>s+l.q,0));
+  const comisionEvitada = p.total * CONFIG.costos.comisionApp / 100;
+
+  document.getElementById("okSheet").innerHTML =
+    '<div class="grab"></div>'
+    + '<div class="ok"></div>'
+    + '<h2 style="text-align:center;font-size:17px">Pedido enviado</h2>'
+    + '<p style="text-align:center;color:var(--muted);font-size:13px;margin:6px 0 20px">Folio <b>' + esc(p.folio) + '</b>. Te confirmamos el tiempo de entrega por WhatsApp.</p>'
+
+    + '<div class="card">'
+    +   '<div class="sum"><span>Total del pedido</span><span style="color:var(--text);font-weight:500">' + money(p.total) + '</span></div>'
+    +   '<div class="sum"><span>Comisión que NO pagaste</span><span class="pos">+' + money(comisionEvitada) + '</span></div>'
+    +   '<div class="sum"><span>Margen estimado de este pedido</span><span>' + money(margen) + '</span></div>'
+    + '</div>'
+
+    + '<div class="sec-t">Tu código para la próxima</div>'
+    + '<div class="code">' + esc(recCode) + '</div>'
+    + '<div class="note">' + CONFIG.recompra.pct + '% de descuento desde ' + money0(CONFIG.recompra.minimo) + ' de subtotal. Ya quedó guardado en este dispositivo: se aplica solo.</div>'
+
+    + '<div class="mt"><button class="btn sec" onclick="cerrar(\'mOk\');ir(\'pedir\')">Volver al menú</button></div>';
+
+  abrir("mOk");
+}
+
+/* =========================================================
+   PANEL NEGOCIO
+   ========================================================= */
+function renderNegocio(){
+  const hoy = new Date().toDateString();
+  const deHoy = ordenes.filter(o => new Date(o.fecha).toDateString() === hoy);
+  const ventas = deHoy.reduce((s,o)=>s+o.total, 0);
+  const ticket = deHoy.length ? ventas/deHoy.length : 0;
+  const evitada = deHoy.reduce((s,o)=>s + o.total*CONFIG.costos.comisionApp/100, 0);
+
+  document.getElementById("metrics").innerHTML =
+      met("Pedidos hoy", deHoy.length)
+    + met("Ventas hoy", money0(ventas))
+    + met("Ticket promedio", money0(ticket))
+    + met("Comisión evitada", money0(evitada), true);
+
+  renderCobros(ventas, deHoy.length);
+
+  const el = document.getElementById("ordenes");
+  if (!ordenes.length){
+    el.innerHTML = '<div class="empty">Todavía no hay pedidos.<br>Los que se envíen desde este dispositivo aparecen aquí.</div>';
+    return;
+  }
+
+  el.innerHTML = ordenes.slice(0,25).map(o => {
+    const f = new Date(o.fecha);
+    const cuando = f.toLocaleDateString("es-MX",{day:"2-digit",month:"short"}) + " " + f.toLocaleTimeString("es-MX",{hour:"2-digit",minute:"2-digit"});
+    return '<div class="ord">'
+      + '<div class="ord-h"><span class="ord-f">' + esc(o.folio) + '</span>'
+      +   (o.prueba ? '<span class="tag">prueba</span>' : '')
+      +   '<span class="ord-d">' + esc(cuando) + '</span></div>'
+      + '<div style="font-size:12.5px;color:var(--muted);margin-bottom:6px">' + esc(o.cliente.nombre) + ' · ' + esc(o.zona) + '</div>'
+      + o.lineas.map(l => '<div class="ord-i">' + l.q + '× ' + esc(l.nombre) + ' — ' + money(l.pu*l.q) + '</div>').join("")
+      + '<div class="ord-t"><span>Total</span><span>' + money(o.total) + '</span></div>'
+      + '</div>';
+  }).join("");
+}
+function met(l, v, hi){
+  return '<div class="metric' + (hi?" hi":"") + '"><div class="l">' + l + '</div><div class="v">' + v + '</div></div>';
+}
+
+/* Costo real de cada metodo de cobro sobre las ventas del dia.
+   Clip: 3.6% + IVA y sin cargo fijo -> plano.
+   Mercado Pago link: % + $4 fijos + IVA -> castiga el ticket chico. */
+function renderCobros(ventas, n){
+  const c = CONFIG.pagos.comisiones;
+  const iva = 1 + c.iva / 100;
+  const el = document.getElementById("cobros");
+  if (!el) return;
+
+  if (!n){
+    el.innerHTML = '<div class="empty">Sin ventas hoy. Carga los pedidos de ejemplo para ver la comparación.</div>';
+    return;
+  }
+
+  const filas = [
+    { n:"Efectivo o transferencia", t:"sin costo para el negocio", v:0 },
+    { n:"Clip, terminal o link (" + c.clip + "% + IVA)", t:"sin cargo fijo", v: ventas * c.clip/100 * iva },
+    { n:"Mercado Pago, 30 días", t:"2.95% + $4 + IVA por pedido", v: (ventas * c.mp30/100 + n*c.mpFijo) * iva },
+    { n:"Mercado Pago, 14 días", t:"3.19% + $4 + IVA por pedido", v: (ventas * c.mp14/100 + n*c.mpFijo) * iva },
+    { n:"Mercado Pago, al instante", t:"3.49% + $4 + IVA por pedido", v: (ventas * c.mpLink/100 + n*c.mpFijo) * iva }
+  ];
+  const max = Math.max.apply(null, filas.map(f=>f.v)) || 1;
+
+  el.innerHTML = '<div class="card">'
+    + filas.map(f =>
+        '<div style="margin-bottom:14px">'
+        + '<div style="display:flex;justify-content:space-between;font-size:13px">'
+        +   '<span>' + esc(f.n) + '</span>'
+        +   '<span style="font-weight:500' + (f.v===0 ? '' : ';color:var(--danger)') + '">'
+        +     (f.v===0 ? '$0' : money0(f.v)) + '</span></div>'
+        + '<div style="height:6px;border-radius:99px;background:var(--surface-2);margin:6px 0 4px;overflow:hidden">'
+        +   '<div style="height:100%;width:' + Math.round(f.v/max*100) + '%;background:' + (f.v===0 ? '#0F6E56' : '#E24B4A') + '"></div></div>'
+        + '<div style="font-size:11.5px;color:var(--hint)">' + esc(f.t)
+        +   (ventas>0 ? ' · ' + (f.v/ventas*100).toFixed(1) + '% de lo vendido' : '') + '</div>'
+        + '</div>').join("")
+    + '</div>'
+    + '<div class="note">Con ticket chico, el cargo fijo de $4 de Mercado Pago pega durísimo: en una bebida de $85 la comisión efectiva llega a 9.5%, contra 4.18% de Clip, que no cobra fijo. <b>Por eso Clip y no link de pago.</b></div>'
+    + '<div class="note">Está prohibido cobrar recargo por pagar con tarjeta (art. 7 Bis LFPC). Lo que sí puedes es descontar por efectivo o transferencia, que es justo lo que hace esta app.</div>';
+}
+
+function sembrarDemo(){
+  const ahora = Date.now();
+  const demo = [
+    { f:"A7K2Q", m:2*3600e3,  l:[{n:"Assam latte",q:2,pu:91},{n:"Galleta de avena",q:2,pu:35}], z:"Jardines del Moral / Campestre", e:35, cl:"Mariana R." },
+    { f:"A7JX4", m:5*3600e3,  l:[{n:"Cold brew 24 h",q:3,pu:75}], z:"Centro / Zona Piel", e:0, cl:"Diego A." },
+    { f:"A7HP9", m:7*3600e3,  l:[{n:"Darjeeling first flush",q:1,pu:95},{n:"Croissant de almendra",q:1,pu:55}], z:"Lomas de Angelópolis / P. Hierro", e:45, cl:"Paulina S." },
+    { f:"A7GC1", m:26*3600e3, l:[{n:"Té negro al limón",q:4,pu:68}], z:"Coecillo / San Miguel / L. Moderno", e:30, cl:"Rodrigo M." },
+    { f:"A7F5B", m:30*3600e3, l:[{n:"Dirty tea",q:2,pu:101},{n:"Sándwich de pavo",q:1,pu:85}], z:"Las Palmas / San Jerónimo", e:35, cl:"Ana Karen T." }
+  ];
+  demo.forEach(d => {
+    const st = d.l.reduce((s,x)=>s+x.q*x.pu, 0);
+    ordenes.push({
+      folio:d.f, fecha:new Date(ahora - d.m).toISOString(),
+      lineas:d.l.map(x=>({nombre:x.n,q:x.q,pu:x.pu,tops:[],tam:"16"})),
+      subtotal:st, envio:d.e, desc:0, total:st+d.e,
+      zona:d.z, cliente:{nombre:d.cl, tel:"477 000 0000", dir:"Domicilio de ejemplo", pago:"Efectivo"}
+    });
+  });
+  ordenes.sort((a,b)=> new Date(b.fecha) - new Date(a.fecha));
+  save(); renderNegocio();
+}
+
+function borrarTodo(){
+  if (!confirm("Se borran el pedido en curso, el historial y tu código de recompra en este dispositivo. ¿Seguir?")) return;
+  carrito = []; ordenes = []; cliente = {}; recCode = null;
+  localStorage.removeItem(LS.rec);
+  save(); pintarBadge(); renderLista(); renderCarrito(); renderNegocio(); ir("pedir");
+}
+
+/* =========================================================
+   ARRANQUE
+   ========================================================= */
+document.getElementById("hNombre").textContent = CONFIG.negocio.nombre;
+document.getElementById("hSub").textContent    = CONFIG.negocio.lema;
+document.getElementById("hPill").textContent   = "Sin comisión · " + CONFIG.costos.comisionApp + "% ahorrado";
+document.title = "Pedidos directos — " + CONFIG.negocio.nombre;
+document.getElementById("bannerPrueba").classList.toggle("hide", !CONFIG.modoPrueba);
+
+renderChips();
+renderLista();
+pintarBadge();
+</script>
+</body>
+</html>
