@@ -264,7 +264,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
       <h1 id="hNombre" data-page-node-id="rQhRDEUb5dDL3Qb3E2Dd0Y">Té Negro Estudio</h1>
       <p id="hSub" data-page-node-id="wG8kigwLTgr8EdyMZIlzxn">Pedido directo · León, Gto.</p>
     </div>
-    <span class="pill" id="hPill" data-page-node-id="7Hbml9TG7DlFzNREstz1wZ">Sin comisión</span>
+    <span class="pill" id="hPill" data-page-node-id="7Hbml9TG7DlFzNREstz1wZ">Pedido directo</span>
   </div>
 </header>
 
@@ -273,9 +273,6 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
   <div class="wrap" data-page-node-id="12vANOvbs54yyMGCZ83xLV">
     <div class="chips" id="chips" data-page-node-id="eemsEi7pDk1KOUntDWZFFl"></div>
     <div id="lista" data-page-node-id="LrN55xdjfJHXtScTbqGmyH"></div>
-    <div class="note" style="margin:22px 0 4px" data-page-node-id="GGKaOt8tAQVpuqIUydZFSq">
-      <b data-page-node-id="xkouiEV9y6yRjlNYR9vYB7">Pides directo con nosotros.</b> Este pedido no pasa por ninguna app, así que el 100% se queda en el negocio y el precio es el mismo de siempre.
-    </div>
   </div>
 </section>
 
@@ -806,7 +803,7 @@ function renderCarrito(){
     + payCard("transferencia", "Transferencia SPEI",
         "Sin costo · mandas tu comprobante", met, true)
     + payCard("tarjeta", "Tarjeta, link de pago",
-        "El negocio absorbe " + comisionTarjetaPct().toFixed(2) + "% de comisión", met, false)
+        "Sin costo extra para ti", met, false)
     + '</div>';
 
   if (met === "transferencia"){
@@ -828,10 +825,10 @@ function renderCarrito(){
     } else {
       h += '<div class="note">Falta configurar <code>linkPago</code> dentro de <code>CONFIG.pagos</code>.</div>';
     }
-    h += '<div class="note">Por ley no podemos cobrarte más por usar tarjeta, así que la comisión la absorbe el negocio. Si pagas en efectivo o por transferencia, te damos <b>' + CONFIG.pagos.descuentoPct + '% de descuento</b>.</div>';
+    h += '<div class="note">Pagar con tarjeta no te cuesta más. Y si pagas en efectivo o por transferencia, tienes <b>' + CONFIG.pagos.descuentoPct + '% de descuento</b>.</div>';
   }
   if (dPago > 0){
-    h += '<div class="note">Estás pagando sin costo para el negocio: <b>' + CONFIG.pagos.descuentoPct + '% de descuento</b> sobre el subtotal.</div>';
+    h += '<div class="note">Con este método tienes <b>' + CONFIG.pagos.descuentoPct + '% de descuento</b> sobre el subtotal.</div>';
   }
   h += '</div>';
 
@@ -1096,9 +1093,17 @@ function copiarMensaje(){
   }
 }
 
+function etiquetaMetodo(m){
+  return m === "transferencia" ? "Transferencia"
+       : m === "tarjeta"       ? "Tarjeta"
+       : "Efectivo contra entrega";
+}
+
+/* Pantalla que ve el CLIENTE al cerrar su pedido. Solo lo que a el le sirve:
+   folio, total, como pagar y su codigo de recompra. NADA de margenes ni de
+   comisiones: eso vive en el panel oculto. */
 function mostrarExito(p){
-  const margen = p.subtotal - (p.subtotal*CONFIG.costos.insumosPct/100) - (CONFIG.costos.empaque * p.lineas.reduce((s,l)=>s+l.q,0));
-  const comisionEvitada = p.total * CONFIG.costos.comisionApp / 100;
+  const met = p.metodo || "efectivo";
 
   document.getElementById("okSheet").innerHTML =
     '<div class="grab"></div>'
@@ -1108,9 +1113,21 @@ function mostrarExito(p){
 
     + '<div class="card">'
     +   '<div class="sum"><span>Total del pedido</span><span style="color:var(--text);font-weight:500">' + money(p.total) + '</span></div>'
-    +   '<div class="sum"><span>Comisión que NO pagaste</span><span class="pos">+' + money(comisionEvitada) + '</span></div>'
-    +   '<div class="sum"><span>Margen estimado de este pedido</span><span>' + money(margen) + '</span></div>'
+    +   '<div class="sum"><span>Forma de pago</span><span style="color:var(--text)">' + esc(etiquetaMetodo(met)) + '</span></div>'
     + '</div>'
+
+    + (met === "transferencia" && clabeLista()
+        ? '<div class="sec-t">Transfiere a</div>'
+          + '<div class="clabe">' + esc(CONFIG.pagos.clabe) + '</div>'
+          + '<button class="copy" onclick="copiarClabe()">Copiar CLABE</button>'
+          + '<div class="note">' + esc(CONFIG.pagos.banco) + ' · ' + esc(CONFIG.pagos.titular) + '</div>'
+        : '')
+    + (met === "transferencia" && !clabeLista()
+        ? '<div class="note">Te mandamos los datos para transferir por WhatsApp.</div>'
+        : '')
+    + (met === "efectivo"
+        ? '<div class="note">Ten listo ' + money(p.total) + ' en efectivo. El repartidor lleva cambio.</div>'
+        : '')
 
     + '<div class="sec-t">Tu código para la próxima</div>'
     + '<div class="code">' + esc(recCode) + '</div>'
