@@ -982,7 +982,8 @@ function renderCarrito(){
   const zona = CONFIG.envio.zonas.find(z => z.id===(cliente.zonaId||"")) || null;
   const gratis = st >= CONFIG.envio.gratisDesde;
   const envio = !zona ? null : (gratis ? 0 : zona.costo);
-  const recOn = recCode && st >= CONFIG.recompra.minimo;
+  const cod = codigoActivo();
+  const recOn = cod !== "" && st >= CONFIG.recompra.minimo;
   const desc = recOn ? st * CONFIG.recompra.pct / 100 : 0;
   const dPago = descPago(st);
   const total = st + (envio||0) - desc - dPago;
@@ -1064,22 +1065,39 @@ function renderCarrito(){
   }
   h += '</div>';
 
+  /* --- recompra --- */
+  let nRec;
+  if (recOn){
+    nRec = '<div class="note">Código válido: <b>' + CONFIG.recompra.pct + '% de descuento</b> aplicado.</div>';
+  } else if (cod === "" && recCode){
+    nRec = '<div class="note">Tu código es <b>' + esc(recCode) + '</b>. Escríbelo aquí para aplicar tu '
+         + CONFIG.recompra.pct + '% de descuento.</div>';
+  } else if (cod === ""){
+    nRec = '<div class="note">Es tu primer pedido. Al confirmarlo te damos un código para la próxima.</div>';
+  } else if (st < CONFIG.recompra.minimo){
+    nRec = '<div class="note">Código válido, pero aplica desde ' + money0(CONFIG.recompra.minimo) + ' de subtotal.</div>';
+  } else {
+    nRec = '<div class="note">Ese código no tiene el formato correcto. Se ve así: <b>BTL-0000</b>.</div>';
+  }
+
+  h += '<div class="sec-t">Recompra</div><div class="card">'
+    + '<label class="f">Código de recompra</label>'
+    + '<input type="text" id="fCod" value="' + esc(cliente.codigo || "") + '" placeholder="BTL-0000" '
+    + 'autocapitalize="characters" autocomplete="off" onfocus="logCampo(\'codigo\')" '
+    + 'oninput="cliente.codigo=this.value.toUpperCase();save()" onchange="renderCarrito()">'
+    + nRec
+    + '</div>';
+
   /* --- totales --- */
   h += '<div class="card mt">'
     + '<div class="sum"><span>Subtotal</span><span>' + money(st) + '</span></div>'
     + '<div class="sum"><span>Envío' + (zona ? ' · ' + esc(zona.nombre) : '') + '</span><span>'
     +   (envio===null ? 'por definir' : (envio===0 ? '<span class="pos">Gratis</span>' : money(envio))) + '</span></div>'
-    + (desc>0 ? '<div class="sum"><span>Recompra ' + CONFIG.recompra.pct + '% (' + esc(recCode) + ')</span><span class="neg">−' + money(desc) + '</span></div>' : '')
+    + (desc>0 ? '<div class="sum"><span>Recompra ' + CONFIG.recompra.pct + '% (' + esc(cod) + ')</span><span class="neg">−' + money(desc) + '</span></div>' : '')
     + (dPago>0 ? '<div class="sum"><span>Descuento por pago en ' + (met==="efectivo"?"efectivo":"transferencia") + ' ' + CONFIG.pagos.descuentoPct + '%</span><span class="neg">−' + money(dPago) + '</span></div>' : '')
     + '<div class="sum big"><span>Total</span><span>' + money(total) + '</span></div>'
     + '</div>';
 
-  if (recCode && !recOn){
-    h += '<div class="note">Tu código <b>' + esc(recCode) + '</b> aplica desde ' + money0(CONFIG.recompra.minimo) + ' de subtotal.</div>';
-  }
-  if (!recCode){
-    h += '<div class="note">Este es tu primer pedido directo. Al confirmarlo te damos un código de ' + CONFIG.recompra.pct + '% para la próxima.</div>';
-  }
 
   h += '<div class="mt"><button class="btn wa" id="btnEnviar" onclick="enviar()">'
     + (CONFIG.modoPrueba ? "Ver el mensaje que se enviaría" : "Enviar pedido por WhatsApp")
@@ -1111,6 +1129,20 @@ function comisionTarjetaPct(){
    un tercero. Se avisa en pantalla en vez de fallar en silencio. */
 function whatsappListo(){ return /^\d{10,15}$/.test(String(CONFIG.negocio.whatsapp || "")); }
 function clabeLista(){ return /^\d{18}$/.test(String(CONFIG.pagos.clabe || "")); }
+
+/* =========================================================
+   RECOMPRA — por que el codigo NO se deriva del telefono
+   =========================================================
+   Un codigo ALEATORIO es prueba de un pedido previo: solo lo tiene quien ya
+   pidio. Si se derivara del telefono, cualquiera podria calcularlo antes de
+   su primer pedido y el programa de lealtad no filtraria nada.
+   El precio de esa decision es que hay que conservarlo — y por eso viaja
+   dentro de cada mensaje: la conversacion de WhatsApp es el respaldo. */
+function codigoIngresado(){ return String(cliente.codigo || "").trim().toUpperCase(); }
+function codigoActivo(){
+  const c = codigoIngresado();
+  return /^BTL-[A-Z0-9]{4}$/.test(c) ? c : "";
+}
 function descPago(st){
   return metodo() === "tarjeta" ? 0 : st * CONFIG.pagos.descuentoPct / 100;
 }
@@ -1203,7 +1235,8 @@ function enviar(){
   const zona = CONFIG.envio.zonas.find(z=>z.id===cliente.zonaId);
   const gratis = st >= CONFIG.envio.gratisDesde;
   const envio = gratis ? 0 : zona.costo;
-  const recOn = recCode && st >= CONFIG.recompra.minimo;
+  const cod = codigoActivo();
+  const recOn = cod !== "" && st >= CONFIG.recompra.minimo;
   const desc = recOn ? st * CONFIG.recompra.pct / 100 : 0;
   const met = metodo();
   const dPago = descPago(st);
@@ -1224,7 +1257,7 @@ function enviar(){
 
   msg += "Subtotal: " + money(st) + "\n";
   msg += "Envío (" + zona.nombre + "): " + (envio===0 ? "gratis" : money(envio)) + "\n";
-  if (desc>0) msg += "Descuento recompra " + CONFIG.recompra.pct + "%: −" + money(desc) + "\n";
+  if (desc>0) msg += "Descuento recompra " + CONFIG.recompra.pct + "% (" + cod + "): −" + money(desc) + "\n";
   if (dPago>0) msg += "Descuento pago en " + (met==="efectivo" ? "efectivo" : "transferencia") + " " + CONFIG.pagos.descuentoPct + "%: −" + money(dPago) + "\n";
   msg += "*TOTAL: " + money(total) + "*\n\n";
 
@@ -1246,10 +1279,24 @@ function enviar(){
     if (CONFIG.pagos.linkPago) msg += CONFIG.pagos.linkPago + "\n";
   }
 
+  msg += "\n*RECOMPRA*\n";
+  if (desc > 0){
+    msg += "Código del cliente: " + cod + "\n";
+    msg += "Descuento aplicado: " + CONFIG.recompra.pct + "%\n";
+    msg += "(Ese código lo recibió en un pedido anterior.)\n";
+  } else if (cod !== "" && st < CONFIG.recompra.minimo){
+    msg += "Código " + cod + " ingresado, pero el subtotal no llega al mínimo de "
+         + money0(CONFIG.recompra.minimo) + ". Sin descuento.\n";
+  } else if (recCode){
+    msg += "Tiene código " + recCode + " pero no lo escribió. Sin descuento.\n";
+  } else {
+    msg += "Primer pedido. Sin descuento. Se le entrega código para la próxima.\n";
+  }
+
   const pedido = {
     folio: folio, fecha: new Date().toISOString(), prueba: !!CONFIG.modoPrueba,
     lineas: carrito.slice(), subtotal: st, envio: envio, desc: desc, dPago: dPago,
-    metodo: met, total: total,
+    metodo: met, total: total, codigo: cod || null,
     zona: zona.nombre, cliente: { nombre:cliente.nombre, tel:cliente.tel, dir:cliente.dir, pago:met }
   };
   ordenes.unshift(pedido);
@@ -1363,7 +1410,9 @@ function mostrarExito(p){
 
     + '<div class="sec-t">Tu código para la próxima</div>'
     + '<div class="code">' + esc(recCode) + '</div>'
-    + '<div class="note">' + CONFIG.recompra.pct + '% de descuento desde ' + money0(CONFIG.recompra.minimo) + ' de subtotal. Ya quedó guardado en este dispositivo: se aplica solo.</div>'
+    + '<div class="note">' + CONFIG.recompra.pct + '% de descuento desde ' + money0(CONFIG.recompra.minimo) + ' de subtotal.'
+    + ' Quedó guardado en este teléfono, pero <b>también va dentro del mensaje que acabas de mandar</b>: '
+    + 'si cambias de celular o borras los datos del navegador, búscalo ahí y escríbelo al pagar.</div>'
 
     + bloqueSEQ()
 
@@ -1735,6 +1784,10 @@ function pintarBanner(){
   }
 }
 pintarBanner();
+
+/* Si este dispositivo ya pidio antes, el codigo viene pre-escrito. El cliente
+   igual puede borrarlo o escribir otro: la ultima palabra la tiene el. */
+if (!cliente.codigo && recCode) cliente.codigo = recCode;
 
 aplicarPanel();
 revisarHash();
