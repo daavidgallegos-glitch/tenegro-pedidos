@@ -184,6 +184,22 @@ code{
 /* vaso */
 .vaso{flex:none;display:block}
 
+/* ---------- boba: el motivo de perlas ---------- */
+.boba-nota{
+  display:flex;align-items:center;gap:15px;
+  background:var(--noche-2);border:1px solid rgba(198,161,91,.38);
+  border-radius:var(--r-lg);padding:15px 17px;margin-top:16px;
+}
+.boba-nota-i{flex:none;display:flex}
+.boba-nota b{display:block;font-size:13.5px;font-weight:500;color:var(--crema)}
+.boba-nota span{display:block;font-size:11.5px;color:var(--oro);margin-top:4px;letter-spacing:.05em}
+.opt-perlas{display:flex;flex:none;opacity:.85}
+.opt{display:inline-flex;align-items:center;gap:8px}
+.pilares{
+  font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--oro);padding:18px 0 0;text-align:center;
+}
+
 /* ---------- carrito ---------- */
 .line{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--linea-crema);align-items:flex-start}
 .line:last-child{border-bottom:none;padding-bottom:4px}
@@ -273,6 +289,7 @@ input.bad,select.bad{border-color:var(--vino);background:#FBEFEC}
   background:#fff;border:1px solid var(--linea-crema);color:var(--tinta-2);
 }
 .opt.on{background:var(--tinta);border-color:var(--tinta);color:var(--crema);font-weight:600}
+.opt.inc{background:var(--crema-3);border-color:transparent;color:var(--tinta);font-weight:600;cursor:default}
 .opt .d{font-size:11px;opacity:.7;margin-left:6px}
 .opt.on .d{opacity:.85}
 
@@ -381,6 +398,7 @@ input.bad,select.bad{border-color:var(--vino);background:#FBEFEC}
 <!-- ============ PEDIR ============ -->
 <section class="view on" id="v-pedir" data-page-node-id="ziEYI6Ay2GYlZcQIHCzAVt">
   <div class="wrap" data-page-node-id="12vANOvbs54yyMGCZ83xLV">
+    <div class="pilares">Milk Tea · Fruit Tea · Boba · Fizz</div>
     <div class="chips" id="chips" data-page-node-id="eemsEi7pDk1KOUntDWZFFl"></div>
     <div id="lista" data-page-node-id="LrN55xdjfJHXtScTbqGmyH"></div>
   </div>
@@ -580,7 +598,7 @@ const MENU = [
   { id:"fpassion", cat:"fizz",  n:"Passion Fizz",         d:"Té negro, maracuyá y agua mineral.",           p:95,  color:"#DFA22F", fizz:true },
   { id:"fmango",   cat:"fizz",  n:"Mango Lemon Fizz",     d:"Té negro, mango, limón y agua mineral.",       p:95,  color:"#E7BC4A", fizz:true },
 
-  { id:"scream",   cat:"sign",  n:"Brown Sugar Cream Tea", d:"Té negro + leche + azúcar morena + cream foam.", p:105, color:"#A9743E", foam:true, leche:true, pop:true },
+  { id:"scream",   cat:"sign",  n:"Brown Sugar Boba",      d:"Té negro + leche + azúcar morena + tapioca.",    p:105, color:"#A9743E", foam:true, leche:true, boba:true, pop:true },
   { id:"pcream",   cat:"sign",  n:"Peach Cream Tea",       d:"Té negro + durazno + cream foam.",              p:99,  color:"#E8A05C", foam:true },
   { id:"passcream",cat:"sign",  n:"Passion Cream Tea",     d:"Té negro + maracuyá + cream foam.",             p:105, color:"#DDA02A", foam:true },
   { id:"velvet",   cat:"sign",  n:"Black Velvet",          d:"Té negro + leche + vainilla + azúcar morena + cream foam.", p:105, color:"#6E4A2E", foam:true, leche:true }
@@ -606,11 +624,12 @@ const LECHES = [
   { id:"vegetal", n:"Vegetal",     d:15 }
 ];
 
-/* Los tres extras que sí son adiciones. */
+/* Los tres extras que sí son adiciones. Tapioca entró con el menú nuevo
+   y "extra jarabe" desapareció de la carta. */
 const TOPPINGS = [
-  { id:"foam",   n:"Cream foam",   d:15 },
-  { id:"fruit",  n:"Extra fruta",  d:12 },
-  { id:"syrup",  n:"Extra jarabe", d:12 }
+  { id:"tapioca", n:"Tapioca",     d:18, boba:true },
+  { id:"foam",    n:"Cream foam",  d:15 },
+  { id:"fruit",   n:"Extra fruta", d:12 }
 ];
 
 /* =========================================================
@@ -719,6 +738,14 @@ function renderLista(){
       + '</div>';
   }).join("");
 
+  if (catActiva === "milk"){
+    h += '<div class="boba-nota">'
+      +   '<div class="boba-nota-i">' + perlas(24, "#C6A15B") + '</div>'
+      +   '<div><b>Añade boba a cualquier Milk Tea</b>'
+      +   '<span>+$18 · la eliges al personalizar</span></div>'
+      + '</div>';
+  }
+
   document.getElementById("lista").innerHTML = h;
 }
 
@@ -749,11 +776,38 @@ function vaso(m, alto){
       +  '<circle cx="15" cy="39" r="1.5"/><circle cx="24" cy="44" r="1.9"/>'
       +  '</g>';
   }
+  if (m.boba){
+    s += '<g clip-path="url(#' + uid + ')">';
+    [[17,47.5,2.4],[21.5,49,2.6],[26,47,2.3],[19,43.5,2.2],[24.5,44,2.1],[22,40,1.9]]
+      .forEach(function(p){
+        s += '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="' + p[2] + '" fill="#2A1F16"/>';
+        s += '<circle cx="' + (p[0]-p[2]*0.3).toFixed(1) + '" cy="' + (p[1]-p[2]*0.35).toFixed(1)
+           + '" r="' + (p[2]*0.3).toFixed(1) + '" fill="#FFFFFF" opacity=".3"/>';
+      });
+    s += '</g>';
+  }
   s += '<path d="M12 15 L15.5 46" stroke="#FFFFFF" stroke-width="2" opacity=".3" stroke-linecap="round"/>';
   s += '<rect x="6" y="5" width="32" height="5" rx="2.5" fill="#FFFFFF" opacity=".9"/>';
   s += '<path d="' + cuerpo + '" fill="none" stroke="rgba(27,23,18,.2)" stroke-width="1"/>';
   s += '</svg>';
   return s;
+}
+
+/* Motivo de perlas de tapioca: el elemento visual de la marca para "Boba",
+   uno de los cuatro pilares del menu. Se usa en el vaso, en el aviso de la
+   categoria Milk Tea y en la opcion de extras. Un solo motivo, tres usos. */
+function perlas(alto, color){
+  const h = alto || 18;
+  const w = Math.round(h * 2.2);
+  const c = color || "#2A1F16";
+  return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 44 20" aria-hidden="true" style="display:block">'
+    + '<circle cx="10" cy="12" r="7" fill="' + c + '"/>'
+    + '<circle cx="7.6" cy="9.6" r="2.1" fill="#FFFFFF" opacity=".26"/>'
+    + '<circle cx="26" cy="9" r="6" fill="' + c + '"/>'
+    + '<circle cx="24" cy="7" r="1.8" fill="#FFFFFF" opacity=".26"/>'
+    + '<circle cx="38" cy="13" r="5" fill="' + c + '"/>'
+    + '<circle cx="36.6" cy="11.6" r="1.5" fill="#FFFFFF" opacity=".26"/>'
+    + '</svg>';
 }
 
 /* =========================================================
@@ -767,7 +821,7 @@ function abrirProducto(id){
   draft = {
     pid: m.id, nombre: m.n, base: m.p,
     color: m.color, foam: !!m.foam, fizz: !!m.fizz,
-    conLeche: !!m.leche, q: 1,
+    conLeche: !!m.leche, bobaBase: !!m.boba, q: 1,
     hielo: "regular", azucar: "50",
     leche: m.leche ? "entera" : null,
     tops: [], nota: ""
@@ -797,7 +851,10 @@ function pintarProducto(){
   let h = '<div class="grab"></div>';
 
   h += '<div style="display:flex;gap:16px;align-items:flex-start">'
-    +   '<div style="flex:none">' + vaso({ id:draft.pid, color:draft.color, foam:draft.foam, fizz:draft.fizz }, 92) + '</div>'
+    +   '<div style="flex:none">' + vaso({
+          id: draft.pid, color: draft.color, foam: draft.foam, fizz: draft.fizz,
+          boba: draft.bobaBase || draft.tops.indexOf("tapioca") >= 0
+        }, 92) + '</div>'
     +   '<div style="flex:1;min-width:0">'
     +     '<h2 style="font-size:22px;line-height:1.15">' + esc(m.n) + '</h2>'
     +     '<p style="margin:8px 0 0;font-size:12.5px;color:var(--tinta-2);line-height:1.5">' + esc(m.d) + '</p>'
@@ -810,10 +867,15 @@ function pintarProducto(){
   if (draft.conLeche) h += opBlock("Leche", LECHES, "leche", false);
 
   h += '<div class="opt-t"><span>Extras</span><span style="color:var(--tinta-3)">opcional</span></div>'
-    +  '<div class="opts">' + TOPPINGS.map(t =>
-         '<button class="opt' + (draft.tops.indexOf(t.id) >= 0 ? " on" : "") + '" onclick="toggleTop(\'' + t.id + '\')">'
-         + esc(t.n) + '<span class="d">+' + money0(t.d) + '</span></button>'
-       ).join("") + '</div>';
+    +  '<div class="opts">' + TOPPINGS.map(function(t){
+         const icono = t.boba ? '<span class="opt-perlas">' + perlas(12, "currentColor") + '</span>' : '';
+         // Si la bebida ya trae tapioca, no se cobra otra vez ni se puede agregar de nuevo.
+         if (draft.bobaBase && t.id === "tapioca"){
+           return '<span class="opt inc">' + icono + esc(t.n) + '<span class="d">incluida</span></span>';
+         }
+         return '<button class="opt' + (draft.tops.indexOf(t.id) >= 0 ? " on" : "") + '" onclick="toggleTop(\'' + t.id + '\')">'
+           + icono + esc(t.n) + '<span class="d">+' + money0(t.d) + '</span></button>';
+       }).join("") + '</div>';
 
   h += '<label class="f">Nota para la barra</label>'
     +  '<input type="text" id="dNota" placeholder="Sin popote, aparte el hielo..." value="' + esc(draft.nota) + '" oninput="draft.nota=this.value">';
@@ -872,6 +934,7 @@ function confirmarProducto(){
   const linea = {
     pid: draft.pid, nombre: draft.nombre, pu: p, q: draft.q,
     color: draft.color, foam: draft.foam, fizz: draft.fizz,
+    boba: draft.bobaBase || draft.tops.indexOf("tapioca") >= 0,
     hielo: draft.hielo, azucar: draft.azucar,
     leche: draft.leche, tops: draft.tops.slice(), nota: draft.nota
   };
