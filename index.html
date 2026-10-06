@@ -619,8 +619,9 @@ const MENU = [
    >>> CONFIRMAR CON DAVID: mililitros reales y precio del upgrade. <<<
    ========================================================= */
 const TAMANOS = [
-  { id:"regular", n:"Regular", ml:500, d:0 },
-  { id:"grande",  n:"Grande",  ml:700, d:15 }
+  { id:"regular", n:"Regular",  ml:500,  d:0,  alto:88 },
+  { id:"grande",  n:"Grande",   ml:700,  d:15, alto:106 },
+  { id:"litro",   n:"1 litro",  ml:1000, d:70, alto:128 }
 ];
 
 /* Del menú impreso: Sweetness 0/25/50/75/100% · Ice Regular/Light/No Ice */
@@ -886,16 +887,27 @@ function precioDraft(){
 }
 
 function pintarProducto(){
+  // Guardar el scroll: reemplazar el innerHTML lo reinicia a 0, y eso se ve
+  // como un salto brusco cuando ya habias bajado en la hoja.
+  const hoja = document.getElementById("prodSheet");
+  const scroll = hoja ? hoja.scrollTop : 0;
+
   const m = MENU.find(x => x.id === draft.pid);
   const p = precioDraft();
+  const tm = TAMANOS.find(x => x.id === draft.tam) || TAMANOS[0];
+  const altoCaja = Math.max.apply(null, TAMANOS.map(x => x.alto));
 
   let h = '<div class="grab"></div>';
 
   h += '<div style="display:flex;gap:16px;align-items:flex-start">'
-    +   '<div style="flex:none">' + vaso({
+    // La caja del vaso mide SIEMPRE lo del tamano mas alto, y el vaso se apoya
+    // abajo. Al cambiar de tamano el vaso crece hacia arriba y nada de abajo se
+    // mueve. El salto era justo eso: la fila crecia y empujaba todo.
+    +   '<div style="flex:none;height:' + altoCaja + 'px;display:flex;align-items:flex-end">'
+    +     vaso({
           id: draft.pid, color: draft.color, foam: draft.foam, fizz: draft.fizz,
           boba: draft.bobaBase || draft.tops.indexOf("tapioca") >= 0
-        }, draft.tam === "grande" ? 112 : 92) + '</div>'
+        }, tm.alto) + '</div>'
     +   '<div style="flex:1;min-width:0">'
     +     '<h2 style="font-size:22px;line-height:1.15">' + esc(m.n) + '</h2>'
     +     '<p style="margin:8px 0 0;font-size:12.5px;color:var(--tinta-2);line-height:1.5">' + esc(m.d) + '</p>'
@@ -931,7 +943,8 @@ function pintarProducto(){
   h += '<div class="mt" style="margin-top:24px"><button class="btn" onclick="confirmarProducto()">'
     +  'Agregar ' + money(p * draft.q) + '</button></div>';
 
-  document.getElementById("prodSheet").innerHTML = h;
+  hoja.innerHTML = h;
+  hoja.scrollTop = scroll;
 }
 
 function opBlock(titulo, lista, campo, req){
