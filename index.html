@@ -621,7 +621,7 @@ const MENU = [
 const TAMANOS = [
   { id:"regular", n:"Regular",  ml:500,  d:0,  alto:88 },
   { id:"grande",  n:"Grande",   ml:700,  d:15, alto:106 },
-  { id:"litro",   n:"1 litro",  ml:1000, d:70, alto:128 }
+  { id:"litro",   n:"1 litro",  ml:1000, d:30, alto:128 }
 ];
 
 /* Del menú impreso: Sweetness 0/25/50/75/100% · Ice Regular/Light/No Ice */
@@ -900,10 +900,12 @@ function pintarProducto(){
   let h = '<div class="grab"></div>';
 
   h += '<div style="display:flex;gap:16px;align-items:flex-start">'
-    // La caja del vaso mide SIEMPRE lo del tamano mas alto, y el vaso se apoya
-    // abajo. Al cambiar de tamano el vaso crece hacia arriba y nada de abajo se
-    // mueve. El salto era justo eso: la fila crecia y empujaba todo.
-    +   '<div style="flex:none;height:' + altoCaja + 'px;display:flex;align-items:flex-end">'
+    // La caja del vaso mide SIEMPRE lo del tamano mas alto, asi que nada de
+    // abajo se mueve. Y el vaso va anclado ARRIBA, no abajo: su borde superior
+    // queda fijo a la altura del titulo y crece hacia abajo. Anclado abajo
+    // crecia hacia arriba, se acercaba al titulo, y parecia que el titulo se
+    // movia. El borde que se mueve ahora es el de abajo, que no toca nada.
+    +   '<div style="flex:none;height:' + altoCaja + 'px;display:flex;align-items:flex-start">'
     +     vaso({
           id: draft.pid, color: draft.color, foam: draft.foam, fizz: draft.fizz,
           boba: draft.bobaBase || draft.tops.indexOf("tapioca") >= 0
@@ -915,6 +917,7 @@ function pintarProducto(){
     +   '<button class="x" onclick="cerrar(\'mProd\')" aria-label="Cerrar">&times;</button>'
     + '</div>';
 
+  h += '<div style="height:6px"></div>';
   h += opBlockTam();
   h += opBlock("Dulzor", AZUCARES, "azucar", false);
   h += opBlock("Hielo", HIELOS, "hielo", false);
