@@ -259,7 +259,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
 
 <header data-page-node-id="IFgDpvAhnxbl4oS1IrJXZJ">
   <div class="hd" data-page-node-id="tn67rpWu3KmDpCEbKpBzLv">
-    <div class="logo" data-page-node-id="LOzNfhK1QZO8c9H36yJMGS">TE</div>
+    <div class="logo" id="logo" onclick="toqueLogo()" data-page-node-id="LOzNfhK1QZO8c9H36yJMGS">TE</div>
     <div class="hd-txt" data-page-node-id="UfNey6ZylyN1svkPHjVMCC">
       <h1 id="hNombre" data-page-node-id="rQhRDEUb5dDL3Qb3E2Dd0Y">Té Negro Estudio</h1>
       <p id="hSub" data-page-node-id="wG8kigwLTgr8EdyMZIlzxn">Pedido directo · León, Gto.</p>
@@ -313,6 +313,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
       <button class="btn sec" onclick="sembrarDemo()" data-page-node-id="pMSOpFP1R6ckgcplAiRomP">Cargar pedidos de ejemplo</button>
       <button class="btn sec" onclick="borrarTodo()" data-page-node-id="OkUVJpX2LSt11tcpIEa0EC">Borrar todo</button>
     </div>
+    <div class="mt"><button class="btn sec" onclick="ocultarPanel()">Ocultar este panel</button></div>
+    <div class="note">Este panel es <b>solo para ti</b>: el cliente no lo ve. Para volver a abrirlo, toca el logo <b>5 veces</b> seguidas, o agrega <code>#negocio</code> al final del enlace.</div>
   </div>
 </section>
 
@@ -370,6 +372,10 @@ const CONFIG = {
   // sigues afinando. Es independiente de modoPrueba: con modoPrueba en false y
   // esto en true, el pedido llega a WhatsApp y ademas se avisa que es prueba.
   avisoPrueba: true,
+  // PANEL OCULTO: el panel Negocio es interno (ventas, margenes, comisiones).
+  // Con true queda escondido y se revela tocando el logo 5 veces, o abriendo
+  // la URL con #negocio. Ponlo en false solo si trabajas en un dispositivo tuyo.
+  panelOculto: true,
   negocio: {
     nombre:   "Té Negro Estudio",
     lema:     "Pedido directo · León, Gto.",
@@ -377,7 +383,10 @@ const CONFIG = {
     // app NO puede abrir WhatsApp: avisa en pantalla en vez de mandar el pedido
     // a un numero ajeno.
     whatsapp: "",
-    instagram:"@tenegroestudio"
+    instagram:"@tenegroestudio",
+    // Texto de la etiqueta del encabezado. Va dirigido al CLIENTE, no a ti:
+    // nada de "29% ahorrado", que es tu economia interna y confunde al cliente.
+    pill:     "Pedido directo"
   },
   envio: {
     gratisDesde: 300,           // envio gratis a partir de este subtotal
@@ -505,6 +514,7 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&am
    NAVEGACION
    ========================================================= */
 function ir(v){
+  if (v === "negocio" && CONFIG.panelOculto && !panelVisible) v = "pedir";
   vista = v;
   ["pedir","carrito","negocio"].forEach(k=>{
     document.getElementById("v-"+k).classList.toggle("on", k===v);
@@ -514,6 +524,39 @@ function ir(v){
   if (v==="negocio") renderNegocio();
   document.getElementById("cartbar").classList.toggle("hide", v!=="pedir" || carrito.length===0);
   window.scrollTo(0,0);
+}
+
+/* =========================================================
+   PANEL NEGOCIO OCULTO
+   El panel es interno: ventas, margenes, comisiones, e instrucciones
+   de configuracion. El cliente no tiene nada que hacer ahi.
+   Se revela con 5 toques en el logo, o abriendo la URL con #negocio.
+   ========================================================= */
+let panelVisible = false;
+let toquesLogo = 0, toqueTimer = null;
+
+function aplicarPanel(){
+  const t = document.getElementById("t-negocio");
+  if (!t) return;
+  t.style.display = (panelVisible || !CONFIG.panelOculto) ? "" : "none";
+  if (CONFIG.panelOculto && !panelVisible && vista === "negocio") ir("pedir");
+}
+function revelarPanel(){ panelVisible = true; aplicarPanel(); ir("negocio"); }
+function ocultarPanel(){ panelVisible = false; aplicarPanel(); ir("pedir"); }
+
+function toqueLogo(){
+  if (!CONFIG.panelOculto) return;
+  toquesLogo++;
+  clearTimeout(toqueTimer);
+  toqueTimer = setTimeout(() => { toquesLogo = 0; }, 1500);
+  if (toquesLogo >= 5){
+    toquesLogo = 0;
+    clearTimeout(toqueTimer);
+    if (panelVisible) ocultarPanel(); else revelarPanel();
+  }
+}
+function revisarHash(){
+  if (location.hash === "#negocio" && CONFIG.panelOculto) revelarPanel();
 }
 function abrir(id){ document.getElementById(id).classList.add("on"); }
 function cerrar(id){ document.getElementById(id).classList.remove("on"); }
@@ -1160,7 +1203,7 @@ function borrarTodo(){
    ========================================================= */
 document.getElementById("hNombre").textContent = CONFIG.negocio.nombre;
 document.getElementById("hSub").textContent    = CONFIG.negocio.lema;
-document.getElementById("hPill").textContent   = "Sin comisión · " + CONFIG.costos.comisionApp + "% ahorrado";
+document.getElementById("hPill").textContent   = CONFIG.negocio.pill;
 document.title = "Pedidos directos — " + CONFIG.negocio.nombre;
 document.getElementById("bannerPrueba").classList.toggle("hide", !CONFIG.modoPrueba);
 
@@ -1182,6 +1225,10 @@ function pintarBanner(){
   }
 }
 pintarBanner();
+
+aplicarPanel();
+revisarHash();
+window.addEventListener("hashchange", revisarHash);
 
 renderChips();
 renderLista();
