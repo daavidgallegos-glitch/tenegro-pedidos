@@ -295,6 +295,9 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
     <div class="sec-t">Cuánto te habría costado cobrar hoy</div>
     <div id="cobros"></div>
 
+    <div class="sec-t">Investigación de uso</div>
+    <div id="investigacion"></div>
+
     <div class="sec-t" data-page-node-id="pAIZtTAAx5GXEpCA9C2zb5">Pedidos guardados en este dispositivo</div>
     <div id="ordenes" data-page-node-id="k8OzdDT8rh5aPoQJ6Uhmqi"></div>
 
@@ -360,6 +363,11 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
   <div class="sheet" id="msgSheet"></div>
 </div>
 
+<!-- ============ MODAL CONSENTIMIENTO (investigacion) ============ -->
+<div class="scrim" id="mConsent">
+  <div class="sheet" id="consentSheet"></div>
+</div>
+
 <script>
 /* =========================================================
    CONFIG — cambia esto y ya. Es lo unico que necesitas tocar.
@@ -376,6 +384,15 @@ const CONFIG = {
   // Con true queda escondido y se revela tocando el logo 5 veces, o abriendo
   // la URL con #negocio. Ponlo en false solo si trabajas en un dispositivo tuyo.
   panelOculto: true,
+  // INVESTIGACION: registro de eventos para el estudio de usabilidad.
+  // Ver el plan de investigacion antes de tocar esto.
+  investigacion: {
+    activa: true,        // registra eventos en este dispositivo
+    consentimiento: true, // pide autorizacion al participante antes de registrar
+    pedirSEQ: true,      // pregunta "que tan facil fue" al cerrar el pedido
+    sink: ""             // URL para recibir eventos en lote. Vacio = solo local.
+                         // Ver la seccion "Recoleccion" del plan para montarlo.
+  },
   negocio: {
     nombre:   "Té Negro Estudio",
     lema:     "Pedido directo · León, Gto.",
@@ -515,6 +532,7 @@ function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g, c => ({"&":"&am
    ========================================================= */
 function ir(v){
   if (v === "negocio" && CONFIG.panelOculto && !panelVisible) v = "pedir";
+  const antes = vista;
   vista = v;
   ["pedir","carrito","negocio"].forEach(k=>{
     document.getElementById("v-"+k).classList.toggle("on", k===v);
@@ -524,6 +542,7 @@ function ir(v){
   if (v==="negocio") renderNegocio();
   document.getElementById("cartbar").classList.toggle("hide", v!=="pedir" || carrito.length===0);
   window.scrollTo(0,0);
+  if (v !== antes) logEvento("vista", { v: v });
 }
 
 /* =========================================================
@@ -569,7 +588,7 @@ function renderChips(){
     '<button class="chip' + (c.id===catActiva?" on":"") + '" onclick="setCat(\'' + c.id + '\')">' + esc(c.nombre) + '</button>'
   ).join("");
 }
-function setCat(id){ catActiva = id; renderChips(); renderLista(); }
+function setCat(id){ catActiva = id; renderChips(); renderLista(); logEvento("categoria_cambio", { categoria: id }); }
 
 function renderLista(){
   const items = MENU.filter(m => m.cat===catActiva);
@@ -604,6 +623,7 @@ function abrirProducto(id){
   if (m.cat==="leche" || m.cat==="coldbrew" || m.cat==="origen") draft.leche = "sin";
   pintarProducto();
   abrir("mProd");
+  logEvento("product_open", { pid: m.id, precio: m.p, categoria: m.cat });
 }
 
 function precioDraft(){
@@ -694,6 +714,7 @@ function confirmarProducto(){
   const ex = carrito.find(l => l.key===key);
   if (ex) ex.q += linea.q; else carrito.push(Object.assign({key:key}, linea));
   save(); pintarBadge(); renderLista(); cerrar("mProd");
+  logEvento("product_add", { pid: linea.pid, precio: linea.pu, cantidad: linea.q, toppings: linea.tops.length });
 }
 
 /* =========================================================
@@ -716,6 +737,7 @@ function cambiarQty(i, delta){
   carrito[i].q += delta;
   if (carrito[i].q <= 0) carrito.splice(i,1);
   save(); pintarBadge(); renderCarrito();
+  logEvento("cantidad_cambio", { delta: delta, lineas: carrito.length });
   if (carrito.length===0) ir("pedir");
 }
 
@@ -755,7 +777,7 @@ function renderCarrito(){
   /* --- envio --- */
   h += '<div class="sec-t">Entrega</div><div class="card">'
     + '<label class="f">Zona</label>'
-    + '<select id="fZona" onchange="setZona(this.value)">'
+    + '<select id="fZona" onfocus="logCampo(\'zona\')" onchange="setZona(this.value)">'
     + '<option value="">Elige tu zona...</option>'
     + CONFIG.envio.zonas.map(z =>
         '<option value="' + z.id + '"' + (cliente.zonaId===z.id?" selected":"") + '>'
@@ -768,12 +790,12 @@ function renderCarrito(){
   /* --- datos --- */
   h += '<div class="sec-t">Tus datos</div><div class="card">'
     + '<label class="f">Tu nombre</label>'
-    + '<input type="text" id="fNom" value="' + esc(cliente.nombre||"") + '" placeholder="Nombre y apellido" oninput="cliente.nombre=this.value;save();limpiaMarca(this)">'
+    + '<input type="text" id="fNom" value="' + esc(cliente.nombre||"") + '" placeholder="Nombre y apellido" onfocus="logCampo(\'nombre\')" oninput="cliente.nombre=this.value;save();limpiaMarca(this)">'
     + '<label class="f">Tu WhatsApp de contacto</label>'
-    + '<input type="tel" id="fTel" value="' + esc(cliente.tel||"") + '" placeholder="477 123 4567" oninput="cliente.tel=this.value;save();limpiaMarca(this)">'
+    + '<input type="tel" id="fTel" value="' + esc(cliente.tel||"") + '" placeholder="477 123 4567" onfocus="logCampo(\'telefono\')" oninput="cliente.tel=this.value;save();limpiaMarca(this)">'
     + '<div class="note" style="margin-top:8px">Es el <b>tuyo</b>, no el del negocio. Con ese te avisamos cuando salga el pedido.</div>'
     + '<label class="f">Calle, número y referencias</label>'
-    + '<input type="text" id="fDir" value="' + esc(cliente.dir||"") + '" placeholder="Calle, número, color de fachada" oninput="cliente.dir=this.value;save();limpiaMarca(this)">'
+    + '<input type="text" id="fDir" value="' + esc(cliente.dir||"") + '" placeholder="Calle, número, color de fachada" onfocus="logCampo(\'direccion\')" oninput="cliente.dir=this.value;save();limpiaMarca(this)">'
     + '</div>';
 
   /* --- como paga --- */
@@ -842,7 +864,7 @@ function renderCarrito(){
   el.innerHTML = h;
 }
 
-function setZona(id){ cliente.zonaId = id; save(); renderCarrito(); }
+function setZona(id){ cliente.zonaId = id; save(); renderCarrito(); logEvento("zona_elegida", { zona: id }); }
 
 /* =========================================================
    PAGOS — descuento, nunca recargo (art. 7 Bis LFPC)
@@ -851,7 +873,7 @@ function metodo(){
   const v = cliente.pago;
   return (v === "transferencia" || v === "tarjeta") ? v : "efectivo";
 }
-function setPago(id){ cliente.pago = id; save(); renderCarrito(); }
+function setPago(id){ cliente.pago = id; save(); renderCarrito(); logEvento("metodo_pago", { metodo: id }); }
 
 function comisionTarjetaPct(){
   const c = CONFIG.pagos.comisiones;
@@ -874,6 +896,7 @@ function payCard(id, nombre, costo, actual, esGratis){
 }
 
 function copiarClabe(){
+  logEvento("copiar_clabe");
   const t = CONFIG.pagos.clabe;
   if (navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(t).then(
@@ -931,9 +954,11 @@ function marcarFaltantes(f){
 }
 
 function enviar(){
+  logEvento("order_submit_attempt");
   const f = faltantes();
   if (f.length){
     marcarFaltantes(f);
+    logEvento("validacion_error", { campos: f.map(x => x.id), cuantos: f.length });
     alert(f.length === 1
       ? f[0].txt + "\n\nLo marqué en rojo más arriba."
       : "Faltan " + f.length + " datos:\n\n" + f.map(x => "· " + x.txt).join("\n")
@@ -941,6 +966,7 @@ function enviar(){
     return;
   }
   if (!CONFIG.modoPrueba && !whatsappListo()){
+    logEvento("envio_bloqueado", { motivo: "sin_whatsapp_configurado" });
     alert("El negocio todavía no cargó su número de WhatsApp en CONFIG.negocio.whatsapp, así que el pedido no tiene a dónde llegar.");
     return;
   }
@@ -1010,6 +1036,12 @@ function enviar(){
     ? "https://wa.me/" + CONFIG.negocio.whatsapp + "?text=" + encodeURIComponent(msg)
     : "(sin número de WhatsApp configurado)";
 
+  logEvento("order_submit_success", {
+    total: Math.round(total * 100) / 100,
+    subtotal: st, envio: envio, metodo: met,
+    articulos: nArticulos(), zona: zona.id, recompra: recOn
+  });
+
   carrito = [];
   save(); pintarBadge(); renderLista();
 
@@ -1045,7 +1077,9 @@ function mostrarMensaje(msg, p, url){
     + '<div class="sec-t">Destino</div>'
     + '<div class="note" style="word-break:break-all">' + esc(url) + '</div>'
 
-    + '<div class="note">El pedido quedó guardado en el panel <b>Negocio</b> marcado como prueba, para que veas cómo se acumulan las métricas. Bórralo con <b>Borrar todo</b> cuando termines.</div>';
+    + '<div class="note">El pedido quedó guardado en el panel <b>Negocio</b> marcado como prueba, para que veas cómo se acumulan las métricas. Bórralo con <b>Borrar todo</b> cuando termines.</div>'
+
+    + bloqueSEQ();
 
   window.__ultimoMensaje = msg;
   abrir("mMsg");
@@ -1082,6 +1116,8 @@ function mostrarExito(p){
     + '<div class="sec-t">Tu código para la próxima</div>'
     + '<div class="code">' + esc(recCode) + '</div>'
     + '<div class="note">' + CONFIG.recompra.pct + '% de descuento desde ' + money0(CONFIG.recompra.minimo) + ' de subtotal. Ya quedó guardado en este dispositivo: se aplica solo.</div>'
+
+    + bloqueSEQ()
 
     + '<div class="mt"><button class="btn sec" onclick="cerrar(\'mOk\');ir(\'pedir\')">Volver al menú</button></div>';
 
@@ -1199,6 +1235,232 @@ function borrarTodo(){
 }
 
 /* =========================================================
+   INVESTIGACION — registro de eventos para el estudio de usabilidad
+   =========================================================
+   Cada dispositivo guarda su propia sesion en localStorage bajo "tn_research".
+   Nada se registra hasta que el participante acepta. El log se exporta desde
+   el panel oculto (o se envia al "sink" si hay uno configurado).
+
+   REGLA: al log NUNCA entran nombre, telefono ni direccion. Solo conducta.
+   ========================================================= */
+const RKEY = "tn_research";
+let camposVistos = {};
+
+function nuevoSid(){ return "S" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); }
+
+function contexto(){
+  const ua = navigator.userAgent || "";
+  return {
+    pantalla: (window.innerWidth || 0) + "x" + (window.innerHeight || 0),
+    dispositivo: /Mobi|Android|iPhone|iPad/i.test(ua) ? "movil" : "escritorio",
+    idioma: navigator.language || "",
+    ref: document.referrer || "(directo)",
+    modoPrueba: !!CONFIG.modoPrueba
+  };
+}
+
+function leerSesion(){
+  let s = null;
+  try { s = JSON.parse(localStorage.getItem(RKEY)); } catch(e){}
+  if (!s || !s.sid){
+    s = {
+      sid: nuevoSid(),
+      inicio: Date.now(),
+      consentimiento: CONFIG.investigacion.consentimiento ? null : true,
+      contexto: contexto(),
+      eventos: [],
+      seq: null
+    };
+    escribirSesion(s);
+  }
+  return s;
+}
+function escribirSesion(s){ try { localStorage.setItem(RKEY, JSON.stringify(s)); } catch(e){} }
+
+function logEvento(nombre, datos){
+  if (!CONFIG.investigacion.activa) return;
+  const s = leerSesion();
+  if (s.consentimiento !== true) return;
+  s.eventos.push({
+    n: nombre,
+    ms: Date.now() - s.inicio,
+    vista: vista,
+    d: datos || {}
+  });
+  escribirSesion(s);
+  if (CONFIG.investigacion.sink) enviarAlSink(s, nombre, datos);
+}
+
+function enviarAlSink(s, nombre, datos){
+  try {
+    const payload = JSON.stringify({
+      sid: s.sid, ms: Date.now() - s.inicio, n: nombre, vista: vista,
+      d: datos || {}, ctx: s.contexto
+    });
+    if (navigator.sendBeacon){
+      navigator.sendBeacon(CONFIG.investigacion.sink, new Blob([payload], { type:"text/plain" }));
+    } else {
+      fetch(CONFIG.investigacion.sink, { method:"POST", mode:"no-cors", body: payload, keepalive: true }).catch(function(){});
+    }
+  } catch(e){}
+}
+
+/* Un foco por campo, no uno por cada tecla. */
+function logCampo(campo){
+  if (camposVistos[campo]) return;
+  camposVistos[campo] = true;
+  logEvento("campo_foco", { campo: campo });
+}
+
+function aceptarConsentimiento(v){
+  const s = leerSesion();
+  s.consentimiento = v;
+  escribirSesion(s);
+  cerrar("mConsent");
+  // Si dice NO, no se registra absolutamente nada. Ni siquiera el rechazo como
+  // evento: el estado queda en el campo `consentimiento` de la sesion, que es
+  // metadato, no conducta.
+  if (v){
+    logEvento("consentimiento_aceptado");
+    logEvento("app_open");
+  }
+}
+
+function mostrarConsentimiento(){
+  document.getElementById("consentSheet").innerHTML =
+    '<div class="grab"></div>'
+    + '<div class="sh-h"><div><h2>Estamos probando este menú</h2>'
+    + '<p>Antes de empezar, dos cosas claras</p></div></div>'
+    + '<div class="note">Registramos <b>cómo usas la app</b>: qué tocas, dónde te detienes, cuánto tardas. '
+    + 'Es para encontrar lo que está mal diseñado y arreglarlo.</div>'
+    + '<div class="note">Tu <b>nombre, teléfono y dirección NO entran al registro</b>. '
+    + 'Se quedan en tu teléfono, como parte de tu pedido.</div>'
+    + '<div class="note">Es voluntario. Si dices que no, usas la app igual y no se registra nada.</div>'
+    + '<div class="mt"><button class="btn" onclick="aceptarConsentimiento(true)">Acepto, adelante</button></div>'
+    + '<div class="mt"><button class="btn sec" onclick="aceptarConsentimiento(false)">No, sin registro</button></div>';
+  abrir("mConsent");
+}
+
+/* SEQ: Single Ease Question. Medida de un solo item, escala 1-7.
+   Es el instrumento estandar para facilidad percibida por tarea. */
+function bloqueSEQ(){
+  if (!CONFIG.investigacion.pedirSEQ) return "";
+  const s = leerSesion();
+  if (s.consentimiento !== true) return "";
+  if (s.seq !== null) return '<div id="seqBox"><div class="note">Ya nos dijiste que fue ' + s.seq + ' de 7. Gracias.</div></div>';
+  let h = '<div class="sec-t">Una pregunta rápida</div><div class="card">'
+    + '<div style="font-size:13.5px;margin-bottom:12px">¿Qué tan fácil fue armar tu pedido?</div>'
+    + '<div class="opts">';
+  for (let i = 1; i <= 7; i++) h += '<button class="opt" onclick="responderSEQ(' + i + ')">' + i + '</button>';
+  h += '</div><div style="display:flex;justify-content:space-between;font-size:11.5px;color:var(--hint);margin-top:6px">'
+    +  '<span>Muy difícil</span><span>Muy fácil</span></div></div>';
+  return '<div id="seqBox">' + h + '</div>';
+}
+function responderSEQ(n){
+  const s = leerSesion();
+  s.seq = n;
+  escribirSesion(s);
+  logEvento("seq_respuesta", { valor: n });
+  const el = document.getElementById("seqBox");
+  if (el) el.innerHTML = '<div class="note">Anotado: ' + n + ' de 7. Gracias.</div>';
+}
+
+/* ---------- lectura de resultados ---------- */
+const FUNNEL = [
+  { id:"app_open",              txt:"Abrió la app" },
+  { id:"product_open",          txt:"Abrió un producto" },
+  { id:"product_add",           txt:"Agregó algo al carrito" },
+  { id:"cart_open",             txt:"Abrió su pedido" },
+  { id:"campo_foco",            txt:"Empezó a llenar datos" },
+  { id:"order_submit_attempt",  txt:"Intentó enviar" },
+  { id:"order_submit_success",  txt:"Pedido enviado" }
+];
+
+function tieneEvento(s, id){
+  if (id === "cart_open") return s.eventos.some(e => e.n === "vista" && e.d && e.d.v === "carrito");
+  return s.eventos.some(e => e.n === id);
+}
+
+function resumenSesion(){
+  const s = leerSesion();
+  const cuenta = {};
+  s.eventos.forEach(e => { cuenta[e.n] = (cuenta[e.n] || 0) + 1; });
+  const errores = s.eventos.filter(e => e.n === "validacion_error");
+  const paso = FUNNEL.map(f => ({ txt:f.txt, n: tieneEvento(s, f.id) ? 1 : 0, ok: tieneEvento(s, f.id) }));
+  const hasta = paso.filter(p => p.ok).length;
+  return { sesion: s, cuenta: cuenta, errores: errores, paso: paso, hasta: hasta };
+}
+
+function exportarSesion(){
+  const s = leerSesion();
+  const blob = new Blob([JSON.stringify(s, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "sesion-" + s.sid + ".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  logEvento("exportacion_sesion");
+}
+
+function borrarSesion(){
+  if (!confirm("Se borra el registro de eventos de este dispositivo. ¿Seguir?")) return;
+  localStorage.removeItem(RKEY);
+  camposVistos = {};
+  renderInvestigacion();
+}
+
+function renderInvestigacion(){
+  const el = document.getElementById("investigacion");
+  if (!el) return;
+  const r = resumenSesion();
+  const s = r.sesion;
+
+  if (s.consentimiento === null){
+    el.innerHTML = '<div class="note" style="background:var(--amber-soft)">Este dispositivo todavía no aceptó el aviso de investigación. No se está registrando nada.</div>';
+    return;
+  }
+  if (s.consentimiento === false){
+    el.innerHTML = '<div class="note" style="background:var(--danger-soft);color:var(--danger)">El participante dijo que NO. No se registra nada en este dispositivo.</div>';
+    return;
+  }
+
+  const maxN = 1;
+  el.innerHTML =
+    '<div class="metrics">'
+    + '<div class="metric"><div class="l">Sesión</div><div class="v" style="font-size:14px">' + esc(s.sid) + '</div></div>'
+    + '<div class="metric"><div class="l">Eventos</div><div class="v">' + s.eventos.length + '</div></div>'
+    + '<div class="metric"><div class="l">Pasos completados</div><div class="v">' + r.hasta + '/' + FUNNEL.length + '</div></div>'
+    + '<div class="metric' + (r.errores.length ? ' hi' : '') + '"><div class="l">Errores de validación</div><div class="v">' + r.errores.length + '</div></div>'
+    + '<div class="metric"><div class="l">Duración</div><div class="v">'
+      + (s.eventos.length ? Math.round((s.eventos[s.eventos.length-1].ms) / 1000) + 's' : '0s') + '</div></div>'
+    + '<div class="metric' + (s.seq !== null ? ' hi' : '') + '"><div class="l">SEQ (1-7)</div><div class="v">'
+      + (s.seq !== null ? s.seq : '—') + '</div></div>'
+    + '</div>'
+
+    + '<div class="sec-t">Embudo de esta sesión</div><div class="card">'
+    + r.paso.map(p =>
+        '<div style="margin-bottom:12px">'
+        + '<div style="display:flex;justify-content:space-between;font-size:13px">'
+        +   '<span style="' + (p.ok ? '' : 'color:var(--hint)') + '">' + esc(p.txt) + '</span>'
+        +   '<span style="font-weight:500' + (p.ok ? '' : ';color:var(--hint)') + '">' + (p.ok ? 'sí' : 'no') + '</span>'
+        + '</div>'
+        + '<div style="height:5px;border-radius:99px;background:var(--surface-2);margin-top:5px;overflow:hidden">'
+        +   '<div style="height:100%;width:' + (p.ok ? Math.max(8, Math.round(p.n / maxN * 100)) : 0) + '%;background:'
+        +     (p.ok ? '#0F6E56' : 'transparent') + '"></div>'
+        + '</div></div>').join("")
+    + '</div>'
+
+    + '<div class="note">Esto es <b>una sola sesión, de este dispositivo</b>. La unidad de análisis del estudio es el conjunto de sesiones de todos los participantes. Exporta cada una y córrelas con el analizador.</div>'
+    + '<div class="mt" style="display:flex;gap:10px">'
+    + '<button class="btn" onclick="exportarSesion()">Exportar esta sesión</button>'
+    + '<button class="btn sec" onclick="borrarSesion()">Borrar registro</button>'
+    + '</div>'
+    + '<div class="note"><b>Siguiente sesión.</b> Para medir a otro participante en el mismo dispositivo, borra el registro: así el embudo no se mezcla. La sesión empieza de cero.</div>';
+}
+
+/* =========================================================
    ARRANQUE
    ========================================================= */
 document.getElementById("hNombre").textContent = CONFIG.negocio.nombre;
@@ -1229,6 +1491,15 @@ pintarBanner();
 aplicarPanel();
 revisarHash();
 window.addEventListener("hashchange", revisarHash);
+
+/* Investigacion: inicializa la sesion y, si hace falta, pide consentimiento
+   ANTES de registrar cualquier cosa. */
+const _s0 = leerSesion();
+if (_s0.consentimiento === true) logEvento("app_open");
+if (CONFIG.investigacion.activa && CONFIG.investigacion.consentimiento && _s0.consentimiento === null){
+  mostrarConsentimiento();
+}
+renderInvestigacion();
 
 renderChips();
 renderLista();
