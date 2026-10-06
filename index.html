@@ -253,8 +253,8 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
 </head>
 <body data-page-node-id="aBCdTHrFNacA4TOP9VT9UG">
 
-<div class="banner hide" id="bannerPrueba" data-page-node-id="bnr0000000000000001">
-  <div class="wrap"><b>Modo prueba.</b> El botón no manda nada: te muestra el mensaje exacto que recibirías. Cuando tengas tu WhatsApp y tu CLABE en <code>CONFIG</code>, apaga <code>modoPrueba</code>.</div>
+<div class="banner hide" id="bannerPrueba">
+  <div class="wrap" id="bannerTxt"></div>
 </div>
 
 <header data-page-node-id="IFgDpvAhnxbl4oS1IrJXZJ">
@@ -366,6 +366,10 @@ const CONFIG = {
   // MODO PRUEBA: con true, el boton NO abre WhatsApp. Muestra en pantalla el
   // mensaje exacto que se enviaria. Ponlo en false cuando ya tengas tu numero.
   modoPrueba: true,
+  // AVISO DE PRUEBA: banner para cuando la app YA manda pedidos de verdad pero
+  // sigues afinando. Es independiente de modoPrueba: con modoPrueba en false y
+  // esto en true, el pedido llega a WhatsApp y ademas se avisa que es prueba.
+  avisoPrueba: true,
   negocio: {
     nombre:   "Té Negro Estudio",
     lema:     "Pedido directo · León, Gto.",
@@ -1159,6 +1163,25 @@ document.getElementById("hSub").textContent    = CONFIG.negocio.lema;
 document.getElementById("hPill").textContent   = "Sin comisión · " + CONFIG.costos.comisionApp + "% ahorrado";
 document.title = "Pedidos directos — " + CONFIG.negocio.nombre;
 document.getElementById("bannerPrueba").classList.toggle("hide", !CONFIG.modoPrueba);
+
+/* Un solo banner, dos mensajes. Con modoPrueba encendido no se manda nada; con
+   modoPrueba apagado y avisoPrueba encendido el pedido SI llega a WhatsApp,
+   pero quien lo manda sabe que sigue siendo una prueba. */
+function pintarBanner(){
+  const b = document.getElementById("bannerPrueba");
+  const t = document.getElementById("bannerTxt");
+  if (!b || !t) return;
+  if (CONFIG.modoPrueba){
+    t.innerHTML = "<b>Modo prueba.</b> El botón no manda nada: te muestra el mensaje exacto que recibirías. Cuando tengas tu WhatsApp y tu CLABE en <code>CONFIG</code>, apaga <code>modoPrueba</code>.";
+    b.classList.remove("hide");
+  } else if (CONFIG.avisoPrueba){
+    t.innerHTML = "<b>Versión de prueba.</b> Estamos afinando el menú, los precios y los tiempos. Tu pedido sí llega a nuestro WhatsApp, pero todavía no somos un negocio abierto.";
+    b.classList.remove("hide");
+  } else {
+    b.classList.add("hide");
+  }
+}
+pintarBanner();
 
 renderChips();
 renderLista();
