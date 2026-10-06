@@ -375,7 +375,7 @@ code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;back
 const CONFIG = {
   // MODO PRUEBA: con true, el boton NO abre WhatsApp. Muestra en pantalla el
   // mensaje exacto que se enviaria. Ponlo en false cuando ya tengas tu numero.
-  modoPrueba: true,
+  modoPrueba: false,
   // AVISO DE PRUEBA: banner para cuando la app YA manda pedidos de verdad pero
   // sigues afinando. Es independiente de modoPrueba: con modoPrueba en false y
   // esto en true, el pedido llega a WhatsApp y ademas se avisa que es prueba.
@@ -396,10 +396,9 @@ const CONFIG = {
   negocio: {
     nombre:   "Té Negro Estudio",
     lema:     "Pedido directo · León, Gto.",
-    // VACIO A PROPOSITO hasta que David ponga el suyo. Con este campo vacio la
-    // app NO puede abrir WhatsApp: avisa en pantalla en vez de mandar el pedido
-    // a un numero ajeno.
-    whatsapp: "",
+    // Numero de David. PUBLICO: queda a la vista en el sitio y en el historial
+    // de git. Es lo que el cliente necesita para mandar el pedido.
+    whatsapp: "526621029106",
     instagram:"@tenegroestudio",
     // Texto de la etiqueta del encabezado. Va dirigido al CLIENTE, no a ti:
     // nada de "29% ahorrado", que es tu economia interna y confunde al cliente.
