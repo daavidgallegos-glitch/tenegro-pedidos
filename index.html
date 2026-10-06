@@ -505,6 +505,14 @@ input.bad,select.bad{border-color:var(--vino);background:#FBEFEC}
 /* =========================================================
    CONFIG — cambia esto y ya. Es lo unico que necesitas tocar.
    ========================================================= */
+
+// Sello de version. Se sube con cada despliegue. Lo muestra el panel Negocio:
+// tap 5 veces en el logo para verificar si lo que ves coincide con la ultima
+// version que cargue. Si no coincide, tu navegador esta sirviendo cache viejo:
+// recarga con `?v=N` en la URL (N cualquier cosa) o desde el menu de Safari
+// ("Sin contenido reciente").
+const VERSION = "v14 · 23:01";
+
 const CONFIG = {
   // MODO PRUEBA: con true, el boton NO abre WhatsApp. Muestra en pantalla el
   // mensaje exacto que se enviaria. Ponlo en false cuando ya tengas tu numero.
@@ -1503,14 +1511,18 @@ function mostrarExito(p){
    PANEL NEGOCIO
    ========================================================= */
 function renderNegocio(){
+  // sello de version, al final del primer renglon de metricas, para que David
+  // pueda verificar de un vistazo si esta viendo la ultima o no
+  const sello = '<div style="font:11px ui-monospace,monospace;color:var(--tinta-3);letter-spacing:.05em;margin:-4px 0 14px">' + VERSION + '</div>';
+
   const hoy = new Date().toDateString();
   const deHoy = ordenes.filter(o => new Date(o.fecha).toDateString() === hoy);
   const ventas = deHoy.reduce((s,o)=>s+o.total, 0);
   const ticket = deHoy.length ? ventas/deHoy.length : 0;
   const evitada = deHoy.reduce((s,o)=>s + o.total*CONFIG.costos.comisionApp/100, 0);
 
-  document.getElementById("metrics").innerHTML =
-      met("Pedidos hoy", deHoy.length)
+  document.getElementById("metrics").innerHTML = sello
+      + met("Pedidos hoy", deHoy.length)
     + met("Ventas hoy", money0(ventas))
     + met("Ticket promedio", money0(ticket))
     + met("Comisión evitada", money0(evitada), true);
