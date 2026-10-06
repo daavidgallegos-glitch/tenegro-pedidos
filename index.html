@@ -135,6 +135,8 @@ input[type=text],input[type=tel],select,textarea{
 }
 input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 textarea{resize:vertical;min-height:64px}
+input.bad,select.bad{border-color:var(--danger);background:var(--danger-soft)}
+.err-msg{font-size:12px;color:var(--danger);margin-top:5px}
 .btn{
   display:flex;align-items:center;justify-content:center;gap:8px;
   width:100%;padding:14px;border-radius:var(--radius);font-size:15px;font-weight:500;
@@ -718,12 +720,13 @@ function renderCarrito(){
 
   /* --- datos --- */
   h += '<div class="sec-t">Tus datos</div><div class="card">'
-    + '<label class="f">Nombre</label>'
-    + '<input type="text" id="fNom" value="' + esc(cliente.nombre||"") + '" placeholder="Nombre y apellido" oninput="cliente.nombre=this.value;save()">'
-    + '<label class="f">WhatsApp</label>'
-    + '<input type="tel" id="fTel" value="' + esc(cliente.tel||"") + '" placeholder="477 123 4567" oninput="cliente.tel=this.value;save()">'
+    + '<label class="f">Tu nombre</label>'
+    + '<input type="text" id="fNom" value="' + esc(cliente.nombre||"") + '" placeholder="Nombre y apellido" oninput="cliente.nombre=this.value;save();limpiaMarca(this)">'
+    + '<label class="f">Tu WhatsApp de contacto</label>'
+    + '<input type="tel" id="fTel" value="' + esc(cliente.tel||"") + '" placeholder="477 123 4567" oninput="cliente.tel=this.value;save();limpiaMarca(this)">'
+    + '<div class="note" style="margin-top:8px">Es el <b>tuyo</b>, no el del negocio. Con ese te avisamos cuando salga el pedido.</div>'
     + '<label class="f">Calle, número y referencias</label>'
-    + '<input type="text" id="fDir" value="' + esc(cliente.dir||"") + '" placeholder="Calle, número, color de fachada" oninput="cliente.dir=this.value;save()">'
+    + '<input type="text" id="fDir" value="' + esc(cliente.dir||"") + '" placeholder="Calle, número, color de fachada" oninput="cliente.dir=this.value;save();limpiaMarca(this)">'
     + '</div>';
 
   /* --- como paga --- */
@@ -838,18 +841,60 @@ function copiarClabe(){
 /* =========================================================
    ENVIO DEL PEDIDO
    ========================================================= */
+/* Cada campo faltante lleva su propio texto, para que el aviso diga QUE falta y
+   DONDE. El aviso viejo ("Falta: WhatsApp") era ambiguo: no distinguia el
+   WhatsApp del cliente del WhatsApp del negocio, y no mandaba al campo. */
+function faltantes(){
+  const f = [];
+  if (!cliente.nombre || !cliente.nombre.trim())
+    f.push({ id:"fNom", txt:"Falta tu nombre." });
+  if (!cliente.tel || cliente.tel.replace(/\D/g,"").length < 10)
+    f.push({ id:"fTel", txt:"Falta tu WhatsApp de contacto — el tuyo, con 10 dígitos." });
+  if (!cliente.dir || !cliente.dir.trim())
+    f.push({ id:"fDir", txt:"Falta la dirección de entrega." });
+  if (!cliente.zonaId)
+    f.push({ id:"fZona", txt:"Falta elegir la zona de entrega." });
+  return f;
+}
+
+function limpiaMarca(el){
+  if (!el || !el.classList) return;
+  el.classList.remove("bad");
+  const n = el.nextSibling;
+  if (n && n.classList && n.classList.contains("err-msg")) n.remove();
+}
+
+function marcarFaltantes(f){
+  document.querySelectorAll("#cartBody .bad").forEach(el => el.classList.remove("bad"));
+  document.querySelectorAll("#cartBody .err-msg").forEach(el => el.remove());
+  f.forEach(x => {
+    const el = document.getElementById(x.id);
+    if (!el) return;
+    el.classList.add("bad");
+    const m = document.createElement("div");
+    m.className = "err-msg";
+    m.textContent = x.txt;
+    el.parentNode.insertBefore(m, el.nextSibling);
+  });
+  const primero = document.getElementById(f[0].id);
+  if (primero){
+    try { primero.scrollIntoView({ block:"center" }); } catch(e){}
+    try { primero.focus({ preventScroll:true }); } catch(e){ try { primero.focus(); } catch(e2){} }
+  }
+}
+
 function enviar(){
-  const faltan = [];
-  if (!cliente.nombre || !cliente.nombre.trim()) faltan.push("nombre");
-  if (!cliente.tel || cliente.tel.replace(/\D/g,"").length < 10) faltan.push("WhatsApp");
-  if (!cliente.dir || !cliente.dir.trim()) faltan.push("dirección");
-  if (!cliente.zonaId) faltan.push("zona de entrega");
-  if (faltan.length){
-    alert("Falta: " + faltan.join(", ") + ".");
+  const f = faltantes();
+  if (f.length){
+    marcarFaltantes(f);
+    alert(f.length === 1
+      ? f[0].txt + "\n\nLo marqué en rojo más arriba."
+      : "Faltan " + f.length + " datos:\n\n" + f.map(x => "· " + x.txt).join("\n")
+        + "\n\nLos marqué en rojo más arriba.");
     return;
   }
   if (!CONFIG.modoPrueba && !whatsappListo()){
-    alert("Falta configurar tu WhatsApp en CONFIG.negocio.whatsapp. Sin eso el pedido no tiene a dónde llegar.");
+    alert("El negocio todavía no cargó su número de WhatsApp en CONFIG.negocio.whatsapp, así que el pedido no tiene a dónde llegar.");
     return;
   }
 
@@ -940,7 +985,7 @@ function mostrarMensaje(msg, p, url){
     + '<button class="x" onclick="cerrar(\'mMsg\')" aria-label="Cerrar">&times;</button></div>'
 
     + (sinNumero
-        ? '<div class="note" style="background:var(--danger-soft);color:var(--danger)">Todavía no hay número de WhatsApp. El pedido no tiene a dónde llegar. Ponlo en <code>CONFIG.negocio.whatsapp</code> (52 + 10 dígitos, sin espacios) antes de apagar el modo prueba.</div>'
+        ? '<div class="note" style="background:var(--danger-soft);color:var(--danger)">El <b>negocio</b> todavía no tiene número de WhatsApp cargado, así que el pedido no tiene a dónde llegar. Ponlo en <code>CONFIG.negocio.whatsapp</code> (52 + 10 dígitos, sin espacios) antes de apagar el modo prueba.</div>'
         : '')
 
     + '<div class="mt"></div><div class="msgbox">' + esc(msg) + '</div>'
